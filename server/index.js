@@ -20,8 +20,9 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:8080', 'http://localhost:3000', 'http://localhost:5173', 'http://172.20.10.2:8080', 'http://192.168.1.100:8080', 'http://0.0.0.0:3000', 'http://0.0.0.0:5173', 'http://0.0.0.0:8080'],
-  credentials: true
+  // origin: ['http://localhost:8080', 'http://localhost:3000', 'http://localhost:5173', 'http://172.20.10.2:8080', 'http://192.168.1.100:8080', 'http://0.0.0.0:3000', 'http://0.0.0.0:5173', 'http://0.0.0.0:8080'],
+  origin: '*',
+  credentials: false
 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));

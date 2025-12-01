@@ -4,7 +4,7 @@ import { DefaultLayout } from "@/components/layout/DefaultLayout";
 import { Link } from "react-router-dom";
 import {useState, useEffect} from "react";
 import { useGoogleLogin } from "@react-oauth/google";
-import { googleAuth } from "../api";
+import { exchangeGoogleToken } from "../api";
 import {useNavigate} from 'react-router-dom';
 
 const GoogleLogin = (props) => {
@@ -22,28 +22,39 @@ const GoogleLogin = (props) => {
 
     const responseGoogle = async (authResult) => {
       try {
-        if (authResult["code"]) {
-          const result = await googleAuth(authResult.code);
+        // For implicit flow, we get access_token directly
+        if (authResult["access_token"]) {
+          console.log('Got access token from Google:', authResult.access_token.substring(0, 20) + '...');
+          
+          // Send access token to backend to get JWT
+          const result = await exchangeGoogleToken(authResult.access_token);
           console.log('Server response:', result.data);
           
           if (result.data && result.data.user && result.data.token) {
             const { email, name, image } = result.data.user;
             const token = result.data.token;
+            
+            // Validate token is a proper JWT (should have 3 parts separated by dots)
+            const tokenParts = token.split('.');
+            if (tokenParts.length !== 3) {
+              throw new Error(`Invalid JWT token format. Got ${tokenParts.length} parts instead of 3`);
+            }
+            
             const obj = { email, name, token, image };
-            console.log('Setting user data:', obj);
+            console.log('Valid JWT token received. Setting user data:', { email, name, image, tokenLength: token.length });
             localStorage.setItem('user-info', JSON.stringify(obj));
             setUser(obj);
-            console.log('Navigating to home page...');
+            console.log('User data saved to localStorage. Navigating to home page...');
             navigate('/home', { replace: true });
           } else {
             console.error('Invalid response structure:', result.data);
-            setError('Invalid response from server');
+            setError('Invalid response from server - missing user or token');
             throw new Error('Invalid response structure from server');
           }
         } else {
           console.log('Auth result:', authResult);
-          setError('No code received from Google');
-          throw new Error('No code received from Google');
+          setError('No token received from Google');
+          throw new Error('No token received from Google');
         }
       } catch (e) {
         console.error('Error while Google Login...', e);
@@ -54,7 +65,7 @@ const GoogleLogin = (props) => {
     const googleLogin = useGoogleLogin({
       onSuccess: responseGoogle,
       onError: responseGoogle,
-      flow: "auth-code",
+      flow: "implicit",
     });
   
   

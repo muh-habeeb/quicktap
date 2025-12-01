@@ -6,9 +6,13 @@ const auth = require('../middleware/auth');
 // Google authentication
 router.get('/google', authController.googleAuth);
 
+// Exchange Google access token for JWT
+router.post('/google-token', authController.exchangeGoogleToken);
+
 // Check if user is admin
 router.get('/check-admin', auth, async (req, res) => {
     try {
+        console.log(req.user)
         res.json({ 
             isAdmin: req.user.isAdmin,
             user: {

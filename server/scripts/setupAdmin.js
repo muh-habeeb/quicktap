@@ -5,7 +5,7 @@ require('dotenv').config();
 const setupAdmin = async () => {
     try {
         // Connect to MongoDB using DB_URL
-        const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yendine';
+        const dbUrl = process.env.DB_URL ;
         console.log('Connecting to MongoDB with URL:', dbUrl);
         
         await mongoose.connect(dbUrl);

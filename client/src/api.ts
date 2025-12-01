@@ -12,6 +12,22 @@ const api = axios.create({
     }
 });
 
+// Add Authorization header if token exists in localStorage
+api.interceptors.request.use((request) => {
+    const userInfo = localStorage.getItem('user-info');
+    if (userInfo) {
+        try {
+            const parsed = JSON.parse(userInfo);
+            if (parsed.token) {
+                request.headers.Authorization = `Bearer ${parsed.token}`;
+            }
+        } catch (e) {
+            console.error('Failed to parse user-info from localStorage:', e);
+        }
+    }
+    return request;
+});
+
 // Log API configuration for debugging
 console.log('API Configuration:', {
     baseURL: API_URL,
@@ -100,6 +116,28 @@ export const googleAuth = async (code: string) => {
         } else {
             // Something happened in setting up the request that triggered an Error
             console.error('Error message:', error.message);
+        }
+        throw error;
+    }
+};
+
+// Exchange Google access token for JWT
+export const exchangeGoogleToken = async (access_token: string) => {
+    try {
+        const response = await api.post('/auth/google-token', { access_token });
+        console.log('Token exchange response:', response);
+        
+        // Check if response has the expected structure
+        if (!response.data || !response.data.user) {
+            throw new Error('Invalid response format from server');
+        }
+        
+        return response;
+    } catch (error) {
+        console.error('Token Exchange Error:', error);
+        if (error.response) {
+            console.error('Error response:', error.response.data);
+            console.error('Error status:', error.response.status);
         }
         throw error;
     }
