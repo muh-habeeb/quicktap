@@ -56,7 +56,7 @@ const App = () => {
                 </GoogleOAuthProvider>
               }
             />
-            <Route path='/home' element={<PrivateRoute element={<Home />} />} />
+            <Route path='/home' element={<Home />} />
             <Route path="/food" element={<PrivateRoute element={<Food />} />} />
             <Route path="/community" element={<PrivateRoute element={<Community />} />} />
             <Route path="/chatbot" element={<PrivateRoute element={<Chatbot />} />} />
