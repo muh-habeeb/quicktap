@@ -61,7 +61,7 @@ const App = () => {
             <Route path="/community" element={<PrivateRoute element={<Community />} />} />
             <Route path="/chatbot" element={<PrivateRoute element={<Chatbot />} />} />
             <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
-            <Route path="/scan-qr" element={<QRCodeScanner onScanSuccess={() => {}} onClose={() => {}} />} />
+            <Route path="/scan-qr" element={<PrivateRoute element={<QRCodeScanner />} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

@@ -14,7 +14,7 @@ import { ImageUpload } from "@/components/ui/image-upload";
 import { FeedbackDisplay } from "@/components/FeedbackDisplay";
 import SeatAdminDashboard from "@/components/SeatAdminDashboard";
 import { checkAdminStatus } from "@/services/api";
-import { Loader2, ShieldX } from "lucide-react";
+import { Loader, Loader2, ShieldX } from "lucide-react";
 import { Navigate } from "react-router-dom";
 
 interface Food {
@@ -105,6 +105,8 @@ export default function Admin() {
   const [selectedFood, setSelectedFood] = useState<Food | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAddingFood, setIsAddingFood] = useState(false);
+  const [isEditingFood, setIsEditingFood] = useState(false);
 
   const [newFood, setNewFood] = useState<Partial<Food>>({
     name: '',
@@ -235,10 +237,12 @@ export default function Admin() {
 
   const handleAddFood = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsAddingFood(true);
     try {
       // Validate required fields
       if (!newFood.name || !newFood.description || !newFood.price || !newFood.category || !newFood.image) {
         toast.error('Please fill in all required fields including image');
+        setIsAddingFood(false);
         return;
       }
 
@@ -279,10 +283,10 @@ export default function Admin() {
 
       // Get the newly created food item from response
       const addedFood = await response.json();
-      
+
       // Update the local state with the new food item
       setFoods(prevFoods => [...prevFoods, addedFood]);
-      
+
       // Close the dialog and reset form
       setIsAddFoodDialogOpen(false);
       setNewFood({
@@ -303,12 +307,14 @@ export default function Admin() {
 
       // Show success message
       toast.success('Food item added successfully to database');
-      
+
       // Refresh the food list to ensure we have the latest data
       fetchFoods();
     } catch (error) {
       console.error('Error adding food:', error);
       toast.error(error.message || 'Failed to add food item to database');
+    } finally {
+      setIsAddingFood(false);
     }
   };
 
@@ -316,10 +322,12 @@ export default function Admin() {
     e.preventDefault();
     if (!selectedFood) return;
 
+    setIsEditingFood(true);
     try {
       // Validate required fields
       if (!selectedFood.name || !selectedFood.description || !selectedFood.price || !selectedFood.category || !selectedFood.image) {
         toast.error('Please fill in all required fields including image');
+        setIsEditingFood(false);
         return;
       }
 
@@ -332,12 +340,12 @@ export default function Admin() {
         },
         body: JSON.stringify(selectedFood),
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to update food');
       }
-      
+
       const updatedFood = await response.json();
       setFoods(foods.map(food => food._id === updatedFood._id ? updatedFood : food));
       setIsEditFoodDialogOpen(false);
@@ -346,6 +354,8 @@ export default function Admin() {
     } catch (error) {
       console.error('Error updating food:', error);
       toast.error(error.message || 'Failed to update food item');
+    } finally {
+      setIsEditingFood(false);
     }
   };
 
@@ -354,12 +364,12 @@ export default function Admin() {
       const response = await fetch(`http://localhost:5000/api/foods/${id}`, {
         method: 'DELETE',
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to delete food');
       }
-      
+
       setFoods(foods.filter(food => food._id !== id));
       toast.success('Food item deleted successfully');
     } catch (error) {
@@ -380,12 +390,12 @@ export default function Admin() {
         },
         body: JSON.stringify({ isAvailable: !food.isAvailable }),
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to toggle availability');
       }
-      
+
       const updatedFood = await response.json();
       setFoods(foods.map(food => food._id === updatedFood._id ? updatedFood : food));
       toast.success('Food availability updated');
@@ -400,9 +410,9 @@ export default function Admin() {
       const response = await fetch(`http://localhost:5000/api/posts/${id}/approve`, {
         method: 'PATCH',
       });
-      
+
       if (!response.ok) throw new Error('Failed to approve content');
-      
+
       const updatedPost = await response.json();
       setPosts(posts.map(post => post._id === updatedPost._id ? updatedPost : post));
       toast.success('Content approved and published!');
@@ -416,9 +426,9 @@ export default function Admin() {
       const response = await fetch(`http://localhost:5000/api/posts/${id}/reject`, {
         method: 'PATCH',
       });
-      
+
       if (!response.ok) throw new Error('Failed to reject content');
-      
+
       const updatedPost = await response.json();
       setPosts(posts.map(post => post._id === updatedPost._id ? updatedPost : post));
       toast.info('Content rejected and notified to author');
@@ -436,9 +446,9 @@ export default function Admin() {
         },
         body: JSON.stringify({ status }),
       });
-      
+
       if (!response.ok) throw new Error('Failed to update order status');
-      
+
       const updatedOrder = await response.json();
       setOrders(orders.map(order => order._id === updatedOrder.order._id ? updatedOrder.order : order));
       toast.success(`Order #${id} status updated to ${status}`);
@@ -479,9 +489,9 @@ export default function Admin() {
           image: imageBase64
         }),
       });
-      
+
       if (!response.ok) throw new Error('Failed to send announcement');
-      
+
       toast.success('Announcement sent to all users!');
       form.reset();
     } catch (error) {
@@ -498,7 +508,7 @@ export default function Admin() {
           <h1 className="text-3xl font-bold">Admin Panel</h1>
           <Badge className="bg-yendine-navy text-white">Admin Access</Badge>
         </div>
-        
+
         <Tabs value={selectedTab} onValueChange={setSelectedTab} >
           <TabsList className="flex flex-wrap lg:grid lg:grid-cols-8 mb-8 w-full h-full ">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
@@ -508,7 +518,7 @@ export default function Admin() {
             <TabsTrigger value="payments">Payments</TabsTrigger>
             <TabsTrigger value="feedback">Feedback</TabsTrigger>
           </TabsList>
-          
+
           {/* Dashboard Tab */}
           <TabsContent value="dashboard">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -589,8 +599,8 @@ export default function Admin() {
                     <Input type="file" name="image" accept="image/*" />
                   </div>
                   <div className="flex gap-4">
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       className="bg-yendine-orange hover:bg-yendine-orange/90 text-white"
                     >
                       Send to All Users
@@ -600,7 +610,7 @@ export default function Admin() {
               </CardContent>
             </Card>
           </TabsContent>
-          
+
           {/* Orders Tab */}
           <TabsContent value="orders">
             <Card>
@@ -656,9 +666,9 @@ export default function Admin() {
                             <td className="p-3">₹{order.totalAmount}</td>
                             <td className="p-3">
                               <Badge className={
-                                order.status === 'completed' ? 'bg-green-500' : 
-                                order.status === 'preparing' ? 'bg-yellow-500' : 
-                                order.status === 'ready' ? 'bg-blue-500' : 'bg-gray-500'
+                                order.status === 'completed' ? 'bg-green-500' :
+                                  order.status === 'preparing' ? 'bg-yellow-500' :
+                                    order.status === 'ready' ? 'bg-blue-500' : 'bg-gray-500'
                               }>
                                 {order.status}
                               </Badge>
@@ -669,8 +679,8 @@ export default function Admin() {
                                   {order.paymentMethod}
                                 </Badge>
                                 <Badge className={
-                                  order.paymentStatus === 'completed' ? 'bg-green-500' : 
-                                  order.paymentStatus === 'pending' ? 'bg-yellow-500' : 'bg-red-500'
+                                  order.paymentStatus === 'completed' ? 'bg-green-500' :
+                                    order.paymentStatus === 'pending' ? 'bg-yellow-500' : 'bg-red-500'
                                 }>
                                   {order.paymentStatus}
                                 </Badge>
@@ -713,7 +723,7 @@ export default function Admin() {
               </CardContent>
             </Card>
           </TabsContent>
-          
+
           {/* Food Management Tab */}
           <TabsContent value="foods">
             <Card>
@@ -772,6 +782,8 @@ export default function Admin() {
                             <SelectItem value="appetizer">Appetizer</SelectItem>
                             <SelectItem value="dessert">Dessert</SelectItem>
                             <SelectItem value="beverage">Beverage</SelectItem>
+                            <SelectItem value="cooldrink">Cooldrink</SelectItem>
+                            <SelectItem value="noodles">Noodles</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -791,8 +803,19 @@ export default function Admin() {
                           required
                         />
                       </div>
-                      <Button type="submit" className="w-full bg-yendine-navy hover:bg-yendine-navy/90 text-white">
-                        Add Food Item
+                      <Button
+                        type="submit"
+                        className="w-full bg-yendine-navy hover:bg-yendine-navy/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isAddingFood}
+                      >
+                        {isAddingFood ? (
+                          <>
+                            <span className="inline-block animate-spin mr-2"><Loader className="animate-spin size-3 text-white" /></span>
+                            Adding Food Item...
+                          </>
+                        ) : (
+                          'Add Food Item'
+                        )}
                       </Button>
                     </form>
                   </DialogContent>
@@ -862,7 +885,7 @@ export default function Admin() {
               </CardContent>
             </Card>
           </TabsContent>
-          
+
           {/* Seat Management Tab */}
           <TabsContent value="seats">
             <Card>
@@ -875,7 +898,7 @@ export default function Admin() {
               </CardContent>
             </Card>
           </TabsContent>
-          
+
           {/* Payments Tab */}
           <TabsContent value="payments">
             <Card>
@@ -937,8 +960,8 @@ export default function Admin() {
                             </td>
                             <td className="p-3">
                               <Badge className={
-                                payment.status === 'completed' ? 'bg-green-500' : 
-                                payment.status === 'pending' ? 'bg-yellow-500' : 'bg-red-500'
+                                payment.status === 'completed' ? 'bg-green-500' :
+                                  payment.status === 'pending' ? 'bg-yellow-500' : 'bg-red-500'
                               }>
                                 {payment.status}
                               </Badge>
@@ -957,12 +980,12 @@ export default function Admin() {
               </CardContent>
             </Card>
           </TabsContent>
-          
+
 
 
           {/* Feedback Tab */}
           <TabsContent value="feedback">
-            <FeedbackDisplay 
+            <FeedbackDisplay
               showStats={true}
               showPagination={true}
               limit={10}
@@ -1022,6 +1045,8 @@ export default function Admin() {
                     <SelectItem value="appetizer">Appetizer</SelectItem>
                     <SelectItem value="dessert">Dessert</SelectItem>
                     <SelectItem value="beverage">Beverage</SelectItem>
+                    <SelectItem value="cooldrink">Cooldrink</SelectItem>
+                    <SelectItem value="noodles">Noodles</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1041,8 +1066,19 @@ export default function Admin() {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full bg-yendine-navy hover:bg-yendine-navy/90 text-white">
-                Update Food Item
+              <Button
+                type="submit"
+                className="w-full bg-yendine-navy hover:bg-yendine-navy/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isEditingFood}
+              >
+                {isEditingFood ? (
+                  <>
+                    <span className="inline-block animate-spin mr-2"><Loader className="animate-spin size-3 text-white" /></span>
+                    Updating Food Item...
+                  </>
+                ) : (
+                  'Update Food Item'
+                )}
               </Button>
             </form>
           )}
