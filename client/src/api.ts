@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import config from './config';
 
-const API_URL = config.getApiUrl();
+export const API_URL = config.getApiUrl();
 
 const api = axios.create({
     baseURL: API_URL,

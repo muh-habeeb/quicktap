@@ -333,7 +333,7 @@ export default function Admin() {
 
       console.log('Sending updated food data:', selectedFood);
 
-      const response = await fetch(`http://localhost:5000/api/foods/${selectedFood._id}`, {
+      const response = await fetch(`${API_URL}api/foods/${selectedFood._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
