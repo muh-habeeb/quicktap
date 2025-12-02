@@ -1,0 +1,10 @@
+[{
+  "_id": {
+    "$oid": "692e01f227044e60795d192d"
+  },
+  "name": "ROCK PAPER",
+  "email": "rockpaper1222@gmail.com",
+  "image": "https://lh3.googleusercontent.com/a/ACg8ocJ1oeJAz4diROBeBWnFZqcVYdEL1alZ_CwwzLvKayVoi-YnRNE=s96-c",
+  "isAdmin": true,
+  "__v": 0
+}]

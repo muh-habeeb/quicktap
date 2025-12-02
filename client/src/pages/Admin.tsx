@@ -15,6 +15,7 @@ import SeatAdminDashboard from "@/components/SeatAdminDashboard";
 import { checkAdminStatus } from "@/services/api";
 import { Loader, Loader2, ShieldX } from "lucide-react";
 import { Navigate } from "react-router-dom";
+import { API_URL } from "@/api";
 
 interface Food {
   _id: string;
@@ -173,7 +174,7 @@ export default function Admin() {
 
   const fetchFoods = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/foods');
+      const response = await fetch(`${API_URL}/api/foods`);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to fetch foods');
@@ -188,7 +189,7 @@ export default function Admin() {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/orders/admin/all');
+      const response = await fetch(`${API_URL}/api/orders/admin/all`);
       if (response.ok) {
         const data = await response.json();
         setOrders(data.orders);
@@ -202,7 +203,7 @@ export default function Admin() {
 
   const fetchPosts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/posts');
+      const response = await fetch(`${API_URL}/api/posts`);
       const data = await response.json();
       setPosts(data);
     } catch (error) {
@@ -212,7 +213,7 @@ export default function Admin() {
 
   const fetchPayments = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/payments/admin/all');
+      const response = await fetch(`${API_URL}/api/payments/admin/all`);
       if (response.ok) {
         const data = await response.json();
         setPayments(data.payments);
@@ -224,7 +225,7 @@ export default function Admin() {
 
   const fetchOrderStats = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/orders/admin/stats');
+      const response = await fetch(`${API_URL}/api/orders/admin/stats`);
       if (response.ok) {
         const data = await response.json();
         setOrderStats(data.stats);
@@ -267,7 +268,7 @@ export default function Admin() {
       console.log('Sending food data:', foodData);
 
       // Send request to store in database
-      const response = await fetch('http://localhost:5000/api/foods', {
+      const response = await fetch(`${API_URL}/api/foods`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -333,7 +334,7 @@ export default function Admin() {
 
       console.log('Sending updated food data:', selectedFood);
 
-      const response = await fetch(`${API_URL}api/foods/${selectedFood._id}`, {
+      const response = await fetch(`${API_URL}/api/foods/${selectedFood._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -361,7 +362,7 @@ export default function Admin() {
 
   const handleDeleteFood = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/foods/${id}`, {
+      const response = await fetch(`${API_URL}/api/foods/${id}`, {
         method: 'DELETE',
       });
 
@@ -383,7 +384,7 @@ export default function Admin() {
       const food = foods.find(f => f._id === id);
       if (!food) throw new Error('Food item not found');
 
-      const response = await fetch(`http://localhost:5000/api/foods/${id}/toggle-availability`, {
+      const response = await fetch(`${API_URL}/api/foods/${id}/toggle-availability`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -407,7 +408,7 @@ export default function Admin() {
 
   const handleApproveContent = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/posts/${id}/approve`, {
+      const response = await fetch(`${API_URL}/api/posts/${id}/approve`, {
         method: 'PATCH',
       });
 
@@ -423,7 +424,7 @@ export default function Admin() {
 
   const handleRejectContent = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/posts/${id}/reject`, {
+      const response = await fetch(`${API_URL}/api/posts/${id}/reject`, {
         method: 'PATCH',
       });
 
@@ -439,7 +440,7 @@ export default function Admin() {
 
   const handleUpdateOrderStatus = async (id: string, status: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/orders/${id}/status`, {
+      const response = await fetch(`${API_URL}/api/orders/${id}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -701,7 +702,7 @@ export default function Admin() {
                             <SelectValue placeholder="Select category" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="main">Main Course</SelectItem>
+                            <SelectItem value="meals">Meals</SelectItem>
                             <SelectItem value="appetizer">Appetizer</SelectItem>
                             <SelectItem value="dessert">Dessert</SelectItem>
                             <SelectItem value="beverage">Beverage</SelectItem>
@@ -953,7 +954,7 @@ export default function Admin() {
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="main">Main Course</SelectItem>
+                    <SelectItem value="meals">Meals</SelectItem>
                     <SelectItem value="appetizer">Appetizer</SelectItem>
                     <SelectItem value="dessert">Dessert</SelectItem>
                     <SelectItem value="beverage">Beverage</SelectItem>

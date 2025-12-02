@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-export const API_URL = 'http://localhost:5000/api';
+import { API_URL as BASE_API_URL } from '../api';
+
+export const API_URL = `${BASE_API_URL}/api`;
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -91,7 +93,7 @@ export const checkAdminStatus = async () => {
         }
 
         const { token } = JSON.parse(userInfo);
-        const response = await fetch('http://localhost:5000/auth/check-admin', {
+        const response = await fetch(`${BASE_API_URL}/auth/check-admin`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'

@@ -11,6 +11,7 @@ import { FeedbackService } from "@/services/feedbackService";
 import { SeatService } from "@/services/seatService";
 import { CartService, Cart, CartItem } from "@/services/cartService";
 import { IndianRupee, ReceiptIndianRupeeIcon } from "lucide-react";
+import { API_URL } from "@/api";
 
 interface Food {
   _id: string;
@@ -216,7 +217,7 @@ async function generatePredictiveRecommendations(allFoodItems: Food[], cart: Car
 // Fetch user's orders from backend
 async function fetchUserOrders(userId: string) {
   try {
-    const response = await fetch(`http://localhost:5000/api/orders/user/${userId}`);
+    const response = await fetch(`${API_URL}/api/orders/user/${userId}`);
     if (!response.ok) {
       console.log('ℹ️ No orders found for user (first time)');
       return [];
@@ -412,7 +413,7 @@ export default function Food() {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/foods');
+        const response = await fetch(`${API_URL}/api/foods`);
         if (!response.ok) throw new Error('Failed to fetch foods');
         const data = await response.json();
         setFoods(data);
@@ -623,7 +624,7 @@ export default function Food() {
       }
 
       // Create Razorpay order
-      const response = await fetch('http://localhost:5000/api/payments/create-cart-order', {
+      const response = await fetch(`${API_URL}/api/payments/create-cart-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -661,7 +662,7 @@ export default function Food() {
         handler: async function (response: any) {
           try {
             // Verify payment with user information and order details
-            const verifyResponse = await fetch('http://localhost:5000/api/payments/verify', {
+            const verifyResponse = await fetch(`${API_URL}/api/payments/verify`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -732,7 +733,7 @@ export default function Food() {
                     console.log('Booking seats after Razorpay payment:', bookingData);
 
                     // Use the payment-verified seat booking endpoint
-                    const seatResponse = await fetch('http://localhost:5000/api/seats/book-after-payment', {
+                    const seatResponse = await fetch(`${API_URL}/api/seats/book-after-payment`, {
                       method: 'POST',
                       headers: {
                         'Content-Type': 'application/json',
@@ -864,7 +865,7 @@ export default function Food() {
         orderNotes: selectedSeats.length > 0 ? `Seats booked: ${selectedSeats.join(', ')}` : undefined
       };
 
-      const response = await fetch('http://localhost:5000/api/orders/create', {
+      const response = await fetch(`${API_URL}/api/orders/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

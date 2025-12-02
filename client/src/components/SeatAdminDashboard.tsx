@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
+import { API_URL } from '@/api';
 
 interface BookingStats {
   total: number;
@@ -49,7 +50,7 @@ export default function SeatAdminDashboard() {
   const fetchStats = async () => {
     try {
       console.log('Fetching stats from: http://localhost:5000/api/seats/admin/stats');
-      const response = await fetch('http://localhost:5000/api/seats/admin/stats');
+      const response = await fetch(`${API_URL}/api/seats/admin/stats`);
       console.log('Stats response status:', response.status);
       
       if (!response.ok) {
@@ -119,7 +120,7 @@ export default function SeatAdminDashboard() {
   // Force expire bookings for an order
   const expireBookings = async (orderId: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/seats/admin/expire/${orderId}`, {
+      const response = await fetch(`${API_URL}/api/seats/admin/expire/${orderId}`, {
         method: 'POST',
       });
       if (!response.ok) throw new Error('Failed to expire bookings');

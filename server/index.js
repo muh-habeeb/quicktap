@@ -1,6 +1,7 @@
-require('dotenv').config();
+const config = require('./config/config');
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const Post = require('./models/Post');
 const authRoutes = require('./routes/authRoutes');
 const foodRoutes = require('./routes/foodRoutes');
@@ -20,9 +21,8 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  // origin: ['http://localhost:8080', 'http://localhost:3000', 'http://localhost:5173', 'http://172.20.10.2:8080', 'http://192.168.1.100:8080', 'http://0.0.0.0:3000', 'http://0.0.0.0:5173', 'http://0.0.0.0:8080'],
-  origin: '*',
-  credentials: false
+  origin: config.cors.origin,
+  credentials: config.cors.credentials
 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
@@ -36,6 +36,10 @@ app.use('/api/seats', seatRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/announcements', announcementRoutes);
+
+// Serve static files from the client build directory
+const clientDistPath = path.join(__dirname, '../client/dist');
+app.use(express.static(clientDistPath));
 
 // Schedule cleanup job to run every 5 minutes (after DB connection is established)
 setTimeout(() => {
@@ -236,10 +240,21 @@ app.delete('/api/posts/:postId/comments/:commentId', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server is running on port ${PORT}`);
+// Serve React app for all non-API routes (SPA support)
+// This must be AFTER all API routes
+app.get('*', (req, res) => {
+  // Don't serve index.html for API routes
+  if (req.path.startsWith('/api') || req.path.startsWith('/auth')) {
+    return res.status(404).json({ message: 'API endpoint not found' });
+  }
+  
+  res.sendFile(path.join(clientDistPath, 'index.html'));
+});
+
+const serverUrls = config.getServerUrls();
+app.listen(config.port, '0.0.0.0', () => {
+  console.log(`Server is running on port ${config.port}`);
   console.log(`Server accessible at:`);
-  console.log(`  - Local: http://localhost:${PORT}`);
-  console.log(`  - Network: http://172.20.10.2:${PORT}`);
+  console.log(`  - Local: ${serverUrls.local}`);
+  console.log(`  - Network: ${serverUrls.network}`);
 });

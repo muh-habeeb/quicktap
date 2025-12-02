@@ -10,14 +10,14 @@ const featureCards = [
     description: "Order your favorite food from us with just a few clicks.",
     link: "/food",
     linkText: "Order Food",
-    imgsrc: "../../public/home/splashburger.jpg"
+    imgsrc: "/home/splashburger.jpg"
   },
   {
     title: "Chatbot Assistant",
     description: "Instant answers to your questions about restaurant orders and delivery.",
     link: "/chatbot",
     linkText: "Ask Questions",
-    imgsrc: "../../public/home/ai.png"
+    imgsrc: "/home/ai.png"
   }
 ];
 

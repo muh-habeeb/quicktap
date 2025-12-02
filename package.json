@@ -1,0 +1,16 @@
+{
+  "name": "quick-tap",
+  "version": "1.0.0",
+  "description": "QuickTap Food Ordering System",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "build": "cd client && npm install && npm run build",
+    "start": "cd server && npm install && npm start",
+    "setup-admin": "cd server && npm run setup-admin"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

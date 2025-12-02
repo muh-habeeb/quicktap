@@ -1,4 +1,6 @@
-const API_BASE_URL = 'http://localhost:5000/api/seats';
+import { API_URL } from '../api';
+
+const API_BASE_URL = `${API_URL}/api/seats`;
 
 export interface SeatStatus {
   seatNumber: number;

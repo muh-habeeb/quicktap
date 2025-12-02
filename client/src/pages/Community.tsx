@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Image, X, Heart, HeartOff, Trash2 } from "lucide-react";
 import { detectHateSpeech } from "@/utils/hateDetection";
 import { postService } from "@/services/api";
+import { API_URL } from "@/api";
 
 // Types for our data
 interface Comment {
@@ -359,7 +360,7 @@ export default function Community() {
         }));
 
         // 2) Fetch announcements and map to posts
-        const annRes = await fetch('http://localhost:5000/api/announcements');
+        const annRes = await fetch(`${API_URL}/api/announcements`);
         const annJson = await annRes.json();
         const announcements = Array.isArray(annJson.announcements) ? annJson.announcements : [];
         const announcementPosts: Post[] = announcements.map((a: any) => ({
