@@ -3,7 +3,7 @@ export const config = {
   // API URL configuration
   getApiUrl: () => {
     const hostname = window.location.hostname;
-    const port = window.location.port;
+    const protocol = window.location.protocol; // Get current protocol (http: or https:)
     
     // Development environment
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
@@ -15,7 +15,12 @@ export const config = {
       return 'http://172.20.10.2:5000';
     }
     
-    // Fallback for other network IPs
+    // Production environment (HTTPS) - use same protocol and no port
+    if (protocol === 'https:') {
+      return `https://${hostname}`;
+    }
+    
+    // Fallback for other network IPs with HTTP
     return `http://${hostname}:5000`;
   },
   
