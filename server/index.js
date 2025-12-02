@@ -105,7 +105,7 @@ app.post('/api/posts', upload.single('image'), async (req, res) => {
       try {
         // Upload base64 image to Cloudinary
         const result = await cloudinary.uploader.upload(req.body.image, {
-          folder: 'yendine-posts',
+          folder: 'quick-tap',
           resource_type: 'auto'
         });
         

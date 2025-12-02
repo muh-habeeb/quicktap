@@ -33,7 +33,7 @@ cloudinary.api.ping()
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'yendine-posts',
+        folder: 'quick-tap',
         allowed_formats: ['jpg', 'jpeg', 'png', 'gif'],
         transformation: [{ width: 1000, height: 1000, crop: 'limit' }],
         resource_type: 'auto',

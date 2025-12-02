@@ -167,7 +167,7 @@ function Post({ post, onLike, onAddComment, onDeletePost, onDeleteComment, curre
               <Button
                 onClick={handleAddComment}
                 disabled={!comment.trim()}
-                className="bg-yendine-navy hover:bg-yendine-navy/90 text-white"
+                className="bg-quicktap-navy hover:bg-quicktap-navy/90 text-white"
               >
                 Post
               </Button>
@@ -312,7 +312,7 @@ function NewPostForm({ category, onSubmit }) {
         <CardFooter>
           <Button
             type="submit"
-            className="w-full bg-yendine-teal hover:bg-yendine-teal/90 text-white"
+            className="w-full bg-quicktap-teal hover:bg-quicktap-teal/90 text-white"
             disabled={!title.trim() || !content.trim()}
           >
             Post {category === "yit" ? "Update" : "Event"}

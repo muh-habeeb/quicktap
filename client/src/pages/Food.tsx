@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useRef } from "react";
 import { DefaultLayout } from "@/components/layout/DefaultLayout";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { FeedbackService } from "@/services/feedbackService";
 import { SeatService } from "@/services/seatService";
 import { CartService, Cart, CartItem } from "@/services/cartService";
+import { IndianRupee, ReceiptIndianRupeeIcon } from "lucide-react";
 
 interface Food {
   _id: string;
@@ -50,10 +52,10 @@ function FoodItem({ item, onAddToCart, cartLoading }: { item: Food; onAddToCart:
       </CardHeader>
       <CardFooter className="p-4 pt-0 flex justify-between items-center">
         <span className="font-bold">₹{item.price}</span>
-        <Button 
-          onClick={() => onAddToCart(item)} 
+        <Button
+          onClick={() => onAddToCart(item)}
           size="sm"
-          className="bg-yendine-teal hover:bg-yendine-teal/90 text-white"
+          className="bg-quicktap-teal hover:bg-quicktap-teal/90 text-white"
           disabled={!item.isAvailable || cartLoading}
         >
           {item.isAvailable ? (cartLoading ? 'Adding...' : 'Add to Cart') : 'Not Available'}
@@ -83,7 +85,7 @@ function generatePredictiveRecommendations(allFoodItems: Food[], cart: CartItem[
 
   // Get user's ordering history from localStorage or API
   const userOrderHistory = getUserOrderHistory(userId);
-  
+
   // Analyze ordering patterns
   const patterns = analyzeOrderingPatterns(userOrderHistory);
 
@@ -164,9 +166,9 @@ function generatePredictiveRecommendations(allFoodItems: Food[], cart: CartItem[
 
   // Sort by number of reasons (more reasons = higher recommendation)
   recommendations.sort((a, b) => b.reason.length - a.reason.length);
-  
+
   // Return top 4 recommendations
-  return recommendations.slice(0, 4);
+  return recommendations.slice(0, 2);
 }
 
 // NEW: Get user's ordering history
@@ -177,7 +179,7 @@ function getUserOrderHistory(userId: string) {
     if (storedHistory) {
       return JSON.parse(storedHistory);
     }
-    
+
     // Fallback: return empty history for new users
     return {
       orders: [],
@@ -211,17 +213,17 @@ function analyzeOrderingPatterns(orderHistory: any) {
   orders.forEach((order: any) => {
     order.items.forEach((item: any) => {
       const foodId = item.foodId || item._id;
-      
+
       // Count frequency
       patterns.orderFrequency[foodId] = (patterns.orderFrequency[foodId] || 0) + 1;
-      
+
       // Record timing (hour of day)
       const orderHour = new Date(order.orderDate || order.createdAt).getHours();
       if (!patterns.orderTiming[foodId]) {
         patterns.orderTiming[foodId] = [];
       }
       patterns.orderTiming[foodId].push(orderHour);
-      
+
       // Record last ordered date
       const orderDate = new Date(order.orderDate || order.createdAt);
       if (!patterns.lastOrdered[foodId] || orderDate > patterns.lastOrdered[foodId]) {
@@ -252,7 +254,7 @@ function analyzeOrderingPatterns(orderHistory: any) {
   });
 
   // Calculate average price
-  const totalSpent = orders.reduce((sum: number, order: any) => 
+  const totalSpent = orders.reduce((sum: number, order: any) =>
     sum + order.items.reduce((orderSum: number, item: any) => orderSum + (item.price * item.quantity), 0), 0);
   patterns.pricePreferences.avg = totalSpent / orders.length;
 
@@ -275,7 +277,7 @@ function analyzeOrderingPatterns(orderHistory: any) {
 function calculateFrequencyScore(foodId: string, orderFrequency: Record<string, number>) {
   const count = orderFrequency[foodId] || 0;
   if (count === 0) return { points: 0, count: 0 };
-  
+
   // Higher frequency = higher score (logarithmic scaling)
   const points = Math.min(30, Math.log(count + 1) * 15);
   return { points: Math.round(points), count };
@@ -285,9 +287,9 @@ function calculateFrequencyScore(foodId: string, orderFrequency: Record<string, 
 function calculateRecencyScore(foodId: string, lastOrdered: Record<string, Date>) {
   const lastOrder = lastOrdered[foodId];
   if (!lastOrder) return { points: 0, reason: "" };
-  
+
   const daysSinceLastOrder = (Date.now() - lastOrder.getTime()) / (1000 * 60 * 60 * 24);
-  
+
   if (daysSinceLastOrder <= 1) {
     return { points: 0, reason: "Ordered very recently" }; // Don't recommend if ordered today
   } else if (daysSinceLastOrder <= 3) {
@@ -305,10 +307,10 @@ function calculateRecencyScore(foodId: string, lastOrdered: Record<string, Date>
 function calculateTimingScore(foodId: string, orderTiming: Record<string, number[]>) {
   const timingData = orderTiming[foodId];
   if (!timingData || timingData.length === 0) return { points: 0, reason: "" };
-  
+
   const currentHour = new Date().getHours();
   const avgOrderHour = timingData.reduce((sum, hour) => sum + hour, 0) / timingData.length;
-  
+
   // Check if current time matches when user typically orders this food
   const timeDiff = Math.abs(currentHour - avgOrderHour);
   if (timeDiff <= 2) {
@@ -316,7 +318,7 @@ function calculateTimingScore(foodId: string, orderTiming: Record<string, number
   } else if (timeDiff <= 4) {
     return { points: 10, reason: `Sometimes ordered around this time` };
   }
-  
+
   return { points: 0, reason: "" };
 }
 
@@ -324,22 +326,22 @@ function calculateTimingScore(foodId: string, orderTiming: Record<string, number
 function calculateSequenceScore(foodId: string, orderSequences: string[][], cart: CartItem[]) {
   let points = 0;
   let reason = "";
-  
+
   // Check if this food is often ordered with items in cart
   const cartItemIds = cart.map(item => item._id);
-  
+
   orderSequences.forEach(sequence => {
     if (sequence.includes(foodId)) {
       const otherItems = sequence.filter(id => id !== foodId);
       const matchingCartItems = otherItems.filter(id => cartItemIds.includes(id));
-      
+
       if (matchingCartItems.length > 0) {
         points += 25;
         reason = `Often ordered with items in your cart`;
       }
     }
   });
-  
+
   return { points, reason };
 }
 
@@ -347,7 +349,7 @@ function calculateSequenceScore(foodId: string, orderSequences: string[][], cart
 function calculateCategoryScore(category: string, categoryPreferences: Record<string, number>) {
   const preference = categoryPreferences[category] || 0;
   if (preference === 0) return { points: 0, reason: "" };
-  
+
   // Higher preference = higher score
   const points = Math.min(20, preference * 2);
   return { points, reason: "" };
@@ -356,9 +358,9 @@ function calculateCategoryScore(category: string, categoryPreferences: Record<st
 // NEW: Calculate price preference score
 function calculatePriceScore(price: number, pricePreferences: any) {
   const { min, max, avg } = pricePreferences;
-  
+
   if (min === 0 && max === 0) return { points: 0, reason: "" };
-  
+
   // Prefer items within user's typical price range
   if (price >= min && price <= max) {
     return { points: 20, reason: "Within your typical price range" };
@@ -367,7 +369,7 @@ function calculatePriceScore(price: number, pricePreferences: any) {
   } else if (price <= avg * 2) {
     return { points: 10, reason: "Slightly above your usual spending" };
   }
-  
+
   return { points: 0, reason: "" };
 }
 
@@ -375,22 +377,22 @@ function calculatePriceScore(price: number, pricePreferences: any) {
 function calculateSeasonalScore(item: Food, seasonalPreferences: any) {
   const currentMonth = new Date().getMonth();
   const itemSeasonalData = seasonalPreferences[item._id];
-  
+
   if (!itemSeasonalData) return { points: 0, reason: "" };
-  
+
   const currentMonthOrders = itemSeasonalData[currentMonth] || 0;
   const totalOrders = Object.values(itemSeasonalData).reduce((sum: any, count: any) => sum + count, 0);
-  
+
   if (totalOrders === 0) return { points: 0, reason: "" };
-  
+
   const seasonalRatio = currentMonthOrders / (totalOrders as number);
-  
+
   if (seasonalRatio > 0.3) {
     return { points: 15, reason: "Seasonal favorite" };
   } else if (seasonalRatio > 0.1) {
     return { points: 10, reason: "Sometimes ordered this season" };
   }
-  
+
   return { points: 0, reason: "" };
 }
 
@@ -398,15 +400,15 @@ function calculateSeasonalScore(item: Food, seasonalPreferences: any) {
 function calculateSimilarityScore(item: Food, cart: CartItem[], patterns: any) {
   let points = 0;
   let reason = "";
-  
+
   // Check if user orders similar items together
-    cart.forEach(cartItem => {
-      if (cartItem.category === item.category && cartItem._id !== item._id) {
+  cart.forEach(cartItem => {
+    if (cartItem.category === item.category && cartItem._id !== item._id) {
       points += 15;
       reason = "Similar to items in your cart";
     }
   });
-  
+
   return { points, reason };
 }
 
@@ -417,7 +419,7 @@ function generateContentBasedRecommendations(allFoodItems: Food[], cart: CartIte
   // Get user's ordering history and preferences
   const userOrderHistory = getUserOrderHistory(userId);
   const userProfile = buildUserProfile(userOrderHistory, cart);
-  
+
   // Analyze content similarity for each food item
   allFoodItems.forEach(item => {
     const reasons: string[] = [];
@@ -474,18 +476,18 @@ function generateContentBasedRecommendations(allFoodItems: Food[], cart: CartIte
     if (seasonalScore.points > 0) {
       reasons.push(seasonalScore.reason);
     }
-    
-    recommendations.push({ 
-      ...item, 
+
+    recommendations.push({
+      ...item,
       reason: reasons.slice(0, 3) // Show top 3 reasons
     });
   });
 
   // Sort by number of reasons (more reasons = higher recommendation)
   recommendations.sort((a, b) => b.reason.length - a.reason.length);
-  
+
   // Return top 8 recommendations
-  return recommendations.slice(0, 8);
+  return recommendations.slice(0, 2);
 }
 
 // NEW: Build comprehensive user profile from order history
@@ -506,7 +508,7 @@ function buildUserProfile(orderHistory: any, cart: CartItem[]) {
       order.items.forEach((item: any) => {
         // Extract food details (this would come from your actual food data)
         const foodDetails = extractFoodDetails(item);
-        
+
         // Build ingredient preferences
         if (foodDetails.ingredients) {
           foodDetails.ingredients.forEach((ingredient: string) => {
@@ -591,7 +593,7 @@ function calculateIngredientSimilarity(item: Food, preferredIngredients: Record<
 function calculateCategoryPreference(category: string, categoryPreferences: Record<string, number>) {
   const preference = categoryPreferences[category] || 0;
   if (preference === 0) return { points: 0, reason: '' };
-  
+
   const points = Math.min(30, preference * 3);
   return { points, reason: `Likes ${category} foods` };
 }
@@ -620,9 +622,9 @@ function detectCuisineType(name: string, category: string): string {
 function calculateCuisineSimilarity(item: Food, preferredCuisines: Record<string, number>) {
   const cuisineType = detectCuisineType(item.name, item.category);
   const preference = preferredCuisines[cuisineType] || 0;
-  
+
   if (preference === 0) return { score: 0, cuisineType: '' };
-  
+
   const score = Math.min(40, preference * 8);
   return { score, cuisineType };
 }
@@ -630,9 +632,9 @@ function calculateCuisineSimilarity(item: Food, preferredCuisines: Record<string
 // NEW: Calculate price compatibility
 function calculatePriceCompatibility(price: number, pricePreferences: any) {
   const { min, max, avg } = pricePreferences;
-  
+
   if (min === 0 && max === 0) return { points: 0, reason: '' };
-  
+
   if (price >= min && price <= max) {
     return { points: 25, reason: 'Within your preferred price range' };
   } else if (price <= avg * 1.2) {
@@ -642,17 +644,17 @@ function calculatePriceCompatibility(price: number, pricePreferences: any) {
   } else if (price <= avg * 2) {
     return { points: 10, reason: 'Higher than usual but affordable' };
   }
-  
+
   return { points: 0, reason: '' };
 }
 
 // NEW: Calculate nutritional match
 function calculateNutritionalMatch(nutritionalInfo: any, nutritionalPreferences: any) {
   if (!nutritionalInfo || !nutritionalPreferences) return { points: 0, reason: '' };
-  
+
   let score = 0;
   const tolerance = 0.3; // 30% tolerance
-  
+
   // Check if nutritional values are within preferred ranges
   if (Math.abs(nutritionalInfo.calories - nutritionalPreferences.calories) <= nutritionalPreferences.calories * tolerance) {
     score += 10;
@@ -660,11 +662,11 @@ function calculateNutritionalMatch(nutritionalInfo: any, nutritionalPreferences:
   if (Math.abs(nutritionalInfo.protein - nutritionalPreferences.protein) <= nutritionalPreferences.protein * tolerance) {
     score += 10;
   }
-  
+
   if (score > 0) {
     return { points: score, reason: 'Matches your nutritional preferences' };
   }
-  
+
   return { points: 0, reason: '' };
 }
 
@@ -689,9 +691,9 @@ function calculateTextSimilarity(item: Food, preferredFoodNames: string[]) {
 function calculateStringSimilarity(str1: string, str2: string): number {
   const longer = str1.length > str2.length ? str1 : str2;
   const shorter = str1.length > str2.length ? str2 : str1;
-  
+
   if (longer.length === 0) return 1.0;
-  
+
   const editDistance = levenshteinDistance(longer, shorter);
   return (longer.length - editDistance) / longer.length;
 }
@@ -699,10 +701,10 @@ function calculateStringSimilarity(str1: string, str2: string): number {
 // NEW: Levenshtein distance for string similarity
 function levenshteinDistance(str1: string, str2: string): number {
   const matrix = Array(str2.length + 1).fill(null).map(() => Array(str1.length + 1).fill(null));
-  
+
   for (let i = 0; i <= str1.length; i++) matrix[0][i] = i;
   for (let j = 0; j <= str2.length; j++) matrix[j][0] = j;
-  
+
   for (let j = 1; j <= str2.length; j++) {
     for (let i = 1; i <= str1.length; i++) {
       const indicator = str1[i - 1] === str2[j - 1] ? 0 : 1;
@@ -713,7 +715,7 @@ function levenshteinDistance(str1: string, str2: string): number {
       );
     }
   }
-  
+
   return matrix[str2.length][str1.length];
 }
 
@@ -721,22 +723,22 @@ function levenshteinDistance(str1: string, str2: string): number {
 function calculateSeasonalRelevance(item: Food, seasonalPreferences: Record<string, number>) {
   const currentMonth = new Date().getMonth();
   const itemSeasonalData = seasonalPreferences[item._id];
-  
+
   if (!itemSeasonalData) return { points: 0, reason: '' };
-  
+
   const currentMonthOrders = itemSeasonalData[currentMonth] || 0;
   const totalOrders = Object.values(itemSeasonalData).reduce((sum: any, count: any) => sum + count, 0);
-  
+
   if (totalOrders === 0) return { points: 0, reason: '' };
-  
+
   const seasonalRatio = currentMonthOrders / totalOrders;
-  
+
   if (seasonalRatio > 0.3) {
     return { points: 20, reason: 'Seasonal favorite' };
   } else if (seasonalRatio > 0.1) {
     return { points: 15, reason: 'Sometimes ordered this season' };
   }
-  
+
   return { points: 0, reason: '' };
 }
 
@@ -755,7 +757,7 @@ function extractFoodDetails(orderItem: any) {
 
 export default function Food() {
   const navigate = useNavigate();
-  
+
   const [cart, setCart] = useState<LocalCartItem[]>([]);
   const [dbCart, setDbCart] = useState<Cart | null>(null);
   const [activeDay, setActiveDay] = useState("monday");
@@ -775,7 +777,7 @@ export default function Food() {
   const [seatDetails, setSeatDetails] = useState<{ [key: number]: any }>({});
   const [loadingSeats, setLoadingSeats] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
- 
+
   // Orders: keep track of user's orders for this session and show popup
   const [ordersList, setOrdersList] = useState<any[]>([]);
   const [showOrderPopup, setShowOrderPopup] = useState(false);
@@ -842,15 +844,15 @@ export default function Food() {
         orders: existsInStorage
           ? existingOrders
           : [
-              {
-                _id: order._id || order.id || `local_${Date.now()}`,
-                createdAt: order.createdAt || new Date().toISOString(),
-                items: order.items || [],
-                totalAmount: order.totalAmount || 0,
-                userName: order.userName,
-              },
-              ...existingOrders,
-            ],
+            {
+              _id: order._id || order.id || `local_${Date.now()}`,
+              createdAt: order.createdAt || new Date().toISOString(),
+              items: order.items || [],
+              totalAmount: order.totalAmount || 0,
+              userName: order.userName,
+            },
+            ...existingOrders,
+          ],
         lastUpdated: new Date().toISOString(),
       };
       localStorage.setItem(key, JSON.stringify(payload));
@@ -913,21 +915,21 @@ export default function Food() {
       if (response.success) {
         const statusMap: { [key: number]: 'available' | 'occupied' | 'blocked' } = {};
         const detailsMap: { [key: number]: any } = {};
-        
+
         response.seats.forEach((seat: any) => {
           // Block if seat.status is occupied OR there is any booking info present with time remaining
           const isBlocked = seat.status === 'occupied' || (seat.booking && seat.booking.expiresAt && new Date(seat.booking.expiresAt) > new Date());
-          
+
           if (isBlocked) {
             statusMap[seat.seatNumber] = 'blocked';
           } else {
             statusMap[seat.seatNumber] = 'available';
           }
-          
+
           // Store details for tooltips and time remaining
           detailsMap[seat.seatNumber] = seat;
         });
-        
+
         setSeatStatus(statusMap);
         setSeatDetails(detailsMap);
       }
@@ -941,10 +943,10 @@ export default function Food() {
   // Fetch seat availability on component mount and periodically
   useEffect(() => {
     fetchSeatAvailability();
-    
+
     // Refresh seat availability every 15 seconds for better real-time blocking
     const interval = setInterval(fetchSeatAvailability, 15000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -953,7 +955,7 @@ export default function Food() {
     setCartLoading(true);
     try {
       const userId = getUserId();
-      
+
       // Add to database cart
       const updatedCart = await CartService.addToCart(userId, {
         foodId: item._id,
@@ -963,7 +965,7 @@ export default function Food() {
         image: item.image,
         category: item.category
       });
-      
+
       // Update local state
       setDbCart(updatedCart);
       const localCartItems: LocalCartItem[] = updatedCart.items.map(cartItem => ({
@@ -980,7 +982,7 @@ export default function Food() {
         quantity: cartItem.quantity
       }));
       setCart(localCartItems);
-      
+
       toast.success(`Added ${item.name} to cart`);
     } catch (error) {
       toast.error('Failed to add item to cart');
@@ -994,10 +996,10 @@ export default function Food() {
   const removeFromCart = async (itemId: string) => {
     try {
       const userId = getUserId();
-      
+
       // Remove from database cart
       const updatedCart = await CartService.removeFromCart(userId, itemId);
-      
+
       // Update local state
       setDbCart(updatedCart);
       const localCartItems: LocalCartItem[] = updatedCart.items.map(cartItem => ({
@@ -1014,7 +1016,7 @@ export default function Food() {
         quantity: cartItem.quantity
       }));
       setCart(localCartItems);
-      
+
       toast.info("Item removed from cart");
     } catch (error) {
       toast.error('Failed to remove item from cart');
@@ -1041,11 +1043,11 @@ export default function Food() {
     try {
       const userId = getUserId();
       const amount = getTotalPrice();
-      
+
       // Get user information from localStorage
       const userInfo = localStorage.getItem('user-info');
       let userName = "Guest User";
-      
+
       if (userInfo) {
         try {
           const user = JSON.parse(userInfo);
@@ -1054,7 +1056,7 @@ export default function Food() {
           console.error('Error parsing user info:', parseError);
         }
       }
-      
+
       // Create Razorpay order
       const response = await fetch('http://localhost:5000/api/payments/create-cart-order', {
         method: 'POST',
@@ -1077,12 +1079,12 @@ export default function Food() {
       }
 
       const data = await response.json();
-      
+
       // Ensure we have an order id available for subsequent seat booking
       if (data?.order?.id) {
         setCurrentOrderId(data.order.id);
       }
-      
+
       // Initialize Razorpay payment
       const options = {
         key: 'rzp_test_R9Gsfwn9dWKpPN',
@@ -1125,7 +1127,7 @@ export default function Food() {
               const verifyData = await verifyResponse.json();
               if (verifyData.success) {
                 toast.success('Payment successful! Payment details stored in database.');
-                
+
                 // Create order in database for Razorpay payment
                 try {
                   const created = await createOrderInDatabase('razorpay', 'completed', data.order.id, response.razorpay_payment_id);
@@ -1134,7 +1136,7 @@ export default function Food() {
                 } catch (orderError) {
                   console.error('Error creating order in database:', orderError);
                 }
-                
+
                 // Complete order with seat booking (skip order creation to avoid duplicates)
                 if (selectedSeats.length > 0) {
                   // For Razorpay payments, use the payment-verified seat booking endpoint
@@ -1162,7 +1164,7 @@ export default function Food() {
                     };
 
                     console.log('Booking seats after Razorpay payment:', bookingData);
-                    
+
                     // Use the payment-verified seat booking endpoint
                     const seatResponse = await fetch('http://localhost:5000/api/seats/book-after-payment', {
                       method: 'POST',
@@ -1186,10 +1188,10 @@ export default function Food() {
                     toast.error('Payment successful but seat booking failed. Please contact support.');
                   }
                 }
-                
+
                 // Complete order without calling handleCompleteOrder to avoid duplicate seat booking
                 toast.success("Order completed successfully!");
-                
+
                 // Clear database cart
                 const clearUserId = getUserId();
                 try {
@@ -1198,11 +1200,11 @@ export default function Food() {
                 } catch (error) {
                   console.error('Error clearing cart:', error);
                 }
-                
+
                 setCart([]);
                 setSelectedSeats([]);
                 setCurrentOrderId("");
-                
+
                 // Refresh seat availability after booking
                 await fetchSeatAvailability();
               } else {
@@ -1227,7 +1229,7 @@ export default function Food() {
 
       const rzp = new (window as any).Razorpay(options);
       rzp.open();
-      
+
     } catch (error) {
       toast.error('Failed to initiate payment');
       console.error('Payment error:', error);
@@ -1238,7 +1240,7 @@ export default function Food() {
   const handlePaymentMethodSelect = async (method: string) => {
     setSelectedPaymentMethod(method);
     setShowPaymentOptions(false);
-    
+
     if (method === 'cash') {
       // For cash on delivery, generate order ID and complete order with seat booking
       const orderId = `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -1259,7 +1261,7 @@ export default function Food() {
       const userId = getUserId();
       const userInfo = localStorage.getItem('user-info');
       let userName = "Guest User";
-      
+
       if (userInfo) {
         try {
           const user = JSON.parse(userInfo);
@@ -1328,7 +1330,7 @@ export default function Food() {
         setCurrentOrderId(orderId);
         console.log('Generated order ID for cash payment:', orderId);
       }
-      
+
       // Now book the seats
       await handleBookSeats();
     } else {
@@ -1340,7 +1342,7 @@ export default function Food() {
           if (created) recordOrder(created);
         }
         toast.success("Order placed successfully and stored in database!");
-        
+
         // Clear database cart
         const clearUserId = getUserId();
         try {
@@ -1349,7 +1351,7 @@ export default function Food() {
         } catch (error) {
           console.error('Error clearing cart:', error);
         }
-        
+
         setCart([]);
         setSelectedSeats([]);
         setCurrentOrderId("");
@@ -1365,7 +1367,7 @@ export default function Food() {
   const handleUPIPayment = () => {
     const amount = getTotalPrice();
     const upiUrl = `upi://pay?pa=yendine@upi&pn=Yendine%20Food&am=${amount}&cu=INR&tn=Food%20Order`;
-    
+
     // Try to open UPI app, fallback to showing QR code
     window.open(upiUrl, '_blank');
     toast.success("Opening UPI payment app...");
@@ -1390,12 +1392,12 @@ export default function Food() {
 
   // Function to handle seat booking submission
   const handleBookSeats = async () => {
-    console.log('🚀 handleBookSeats called with:', { 
-      selectedSeats, 
-      currentOrderId, 
-      selectedPaymentMethod 
+    console.log('🚀 handleBookSeats called with:', {
+      selectedSeats,
+      currentOrderId,
+      selectedPaymentMethod
     });
-    
+
     if (selectedSeats.length === 0) {
       console.log('No seats selected, skipping seat booking');
       return; // No seats selected, just complete the order
@@ -1409,13 +1411,13 @@ export default function Food() {
 
     console.log('✅ Starting seat booking process...', { selectedSeats, currentOrderId });
     setSeatBookingLoading(true);
-    
+
     try {
       // Get user information from localStorage
       const userInfo = localStorage.getItem('user-info');
       let userName = "Guest User";
       let userId = null;
-      
+
       if (userInfo) {
         try {
           const user = JSON.parse(userInfo);
@@ -1451,7 +1453,7 @@ export default function Food() {
 
       const response = await SeatService.bookSeatsForCash(bookingData);
       console.log('✅ Seat booking response:', response);
-      
+
       // Create order in database after successful seat booking
       try {
         const created = await createOrderInDatabase('cash', 'completed');
@@ -1461,7 +1463,7 @@ export default function Food() {
         console.error('Error creating order in database:', orderError);
         toast.success(`Seats ${selectedSeats.join(', ')} booked successfully for 30 minutes!`);
       }
-      
+
       // Clear database cart
       const clearCartUserId = getUserId();
       try {
@@ -1470,11 +1472,11 @@ export default function Food() {
       } catch (error) {
         console.error('Error clearing cart:', error);
       }
-      
+
       setCart([]);
       setSelectedSeats([]);
       setCurrentOrderId("");
-      
+
       // Refresh seat availability after booking
       await fetchSeatAvailability();
     } catch (error: any) {
@@ -1496,12 +1498,12 @@ export default function Food() {
 
   // Recommendation logic using content-based filtering
   const recommendations = generateContentBasedRecommendations(foods, cart as any, getUserId());
-  
+
   // Fallback: If no recommendations, show popular items
-  const fallbackRecommendations = recommendations.length === 0 ? 
-    foods.slice(0, 4).map(item => ({ ...item, reason: ['Popular item'] })) : 
+  const fallbackRecommendations = recommendations.length === 0 ?
+    foods.slice(0, 2).map(item => ({ ...item, reason: ['Popular item'] })) :
     recommendations;
-  
+
   // Debug: Log recommendation details
   console.log('Food recommendations:', {
     totalFoods: foods.length,
@@ -1541,64 +1543,54 @@ export default function Food() {
 
   return (
     <DefaultLayout>
-      <div className="container py-8">
+      <div className="container py-8 t">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Campus Food Ordering</h1>
+          <h1 className="text-3xl font-bold text-quicktap-creamy">Campus Food Ordering</h1>
         </div>
 
 
 
         {/* Food Recommendation Section */}
         <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-3">Food Recommendation</h2>
-          
+          <h2 className="text-xl font-semibold mb-3 text-quicktap-creamy/60">Recommended food</h2>
+
           {fallbackRecommendations.length === 0 ? (
             <div className="text-center py-8 bg-gray-50 rounded-lg">
               <p className="text-muted-foreground text-sm">No recommendations at this time. Try adding some items to your cart!</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 place-self-center  ">
               {fallbackRecommendations.map(item => (
-                <Card key={item._id} className="flex flex-col items-center gap-3 p-3 hover:shadow-md transition-shadow">
+                <Card key={item._id} className=" hover:scale-105 duration-200 transition-all w-[200px] rounded-3xl flex flex-col items-center gap-3 p-3 hover:shadow-md ">
                   <img
                     src={item.image || "/placeholder.svg"}
                     alt={item.name}
-                    className="w-20 h-20 object-cover rounded-lg"
+                    className="w-[100px] h-[100px] object-cover rounded-[50%]"
                   />
-                  <div className="text-center flex-1">
-                    <p className="font-medium text-sm">{item.name}</p>
-                    <p className="text-xs text-muted-foreground">₹{item.price}</p>
-                    <p className="text-xs text-blue-600">{item.category}</p>
-                    {/* Show AI reasoning for content-based filtering */}
-                    {item.reason && item.reason.length > 0 && (
-                      <div className="mt-2 text-xs text-gray-600">
-                        <p className="font-medium">Why recommended:</p>
-                        <ul className="list-disc list-inside space-y-1">
-                          {item.reason.map((reason, index) => (
-                            <li key={index} className="text-xs">{reason}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                  <div className="text-center flex-1 capitalize">
+                    <p className="font-medium text-md">{item.name}</p>
+                    <p className="text-sm text-muted-foreground">₹{item.price}</p>
+                    <p className="text-sm text-quicktap-teal">{item.category}</p>
+
+                    <Button
+                      size="sm"
+                      onClick={() => addToCart(item)}
+                      disabled={!item.isAvailable || cartLoading}
+                      className="w-full bg-quicktap-green/80 hover:bg-quicktap-green text-white mt-3"
+                    >
+                      {cartLoading ? 'Adding...' : 'Add to Cart'}
+                    </Button>
                   </div>
-                  <Button
-                    size="sm"
-                    onClick={() => addToCart(item)}
-                    disabled={!item.isAvailable || cartLoading}
-                    className="w-full"
-                  >
-                    {cartLoading ? 'Adding...' : 'Add to Cart'}
-                  </Button>
                 </Card>
               ))}
             </div>
           )}
-          
+
           {/* Recommendation Stats */}
-          <div className="mt-4 text-center text-sm text-muted-foreground">
+          <div className="mt-4 text-center text-quicktap-lightGray/70 text-sm ">
             <p>
-              Showing {fallbackRecommendations.length} AI-powered recommendations from {foods.length} available items
-              {recommendations.length === 0 && fallbackRecommendations.length > 0 && 
+              AI-powered recommendations from available items
+              {recommendations.length === 0 && fallbackRecommendations.length > 0 &&
                 ' (using popular items as fallback)'
               }
             </p>
@@ -1609,9 +1601,6 @@ export default function Food() {
           {/* Food Menu Section */}
           <div className="md:col-span-2 space-y-6">
             <Tabs defaultValue={activeDay} onValueChange={setActiveDay}>
-              <TabsList className="w-full grid grid-cols-5">
-                {/* You can add day tabs here if needed */}
-              </TabsList>
               <TabsContent key={activeDay} value={activeDay}>
                 {loading ? (
                   <div className="text-center py-8">
@@ -1625,7 +1614,7 @@ export default function Food() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {Object.entries(foodsByCategory).map(([category, items]) => (
                       <div key={category} className="col-span-2">
-                        <h3 className="text-lg font-semibold mb-4 capitalize">{category}</h3>
+                        <h3 className="text-lg font-semibold mb-4 capitalize text-quicktap-creamy ">{category}</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           {items.map(item => (
                             <FoodItem key={item._id} item={item} onAddToCart={addToCart} cartLoading={cartLoading} />
@@ -1651,7 +1640,7 @@ export default function Food() {
                     <p className="text-muted-foreground">Your cart is empty</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-4 capitalize">
                     {cart.map(item => (
                       <div key={item._id} className="flex justify-between items-center">
                         <div>
@@ -1662,9 +1651,9 @@ export default function Food() {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="font-medium">₹{item.price * item.quantity}</span>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             onClick={() => removeFromCart(item._id)}
                             className="text-red-500 hover:text-red-700 hover:bg-red-50 p-0 h-8 w-8"
                           >
@@ -1682,207 +1671,32 @@ export default function Food() {
                   </div>
                 )}
               </CardContent>
-              <CardFooter className="flex flex-col gap-4">
-                <Button 
-                  className="w-full bg-yendine-orange hover:bg-yendine-orange/90 text-white"
-                  onClick={handleCheckout}
-                  disabled={cart.length === 0}
-                >
-                  Pay Now (₹{getTotalPrice()})
-                </Button>
-
-                {/* Optional Seat Booking Section */}
-                <div className="mt-4 p-4 border rounded-lg bg-gray-50">
-                  <h4 className="font-semibold mb-3 text-sm">Optional: Book Your Seats</h4>
-                  <p className="text-xs text-muted-foreground mb-3">
-                    Choose from available seats (1-100). Seats will be reserved for 30 minutes.
-                  </p>
-                  
-                  {/* ENHANCED: Blocked Seats Warning */}
-                  {Object.values(seatStatus).some(status => status === 'blocked') && (
-                    <div className="mb-3 p-2 bg-red-50 border border-red-200 rounded text-xs">
-                      <div className="flex items-center gap-2 text-red-700">
-                        <span>⚠️</span>
-                        <span>
-                          Some seats are currently blocked and cannot be selected. 
-                          They will become available after their 30-minute booking period expires.
-                        </span>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Seat Selection Grid */}
-                  <div className="flex flex-wrap gap-1 max-h-32 overflow-y-auto p-2 border rounded bg-white">
-                    {loadingSeats ? (
-                      <div className="w-full text-center py-4 text-xs text-muted-foreground">
-                        <div className="flex items-center justify-center gap-2">
-                          <div className="w-4 h-4 border-2 border-yendine-teal border-t-transparent rounded-full animate-spin"></div>
-                        Loading seat availability...
-                        </div>
-                      </div>
-                    ) : (
-                      Array.from({ length: 100 }, (_, i) => i + 1).map(seatNumber => {
-                        const seatStatusValue = seatStatus[seatNumber];
-                        const isOccupied = seatStatusValue === 'occupied';
-                        const isBlocked = seatStatusValue === 'blocked';
-                        const isSelected = selectedSeats.includes(seatNumber);
-                        
-                        // ENHANCED: Get seat details for better blocking logic
-                        const seatDetail = seatDetails[seatNumber];
-                        const timeRemaining = seatDetail?.booking?.timeRemaining || 0;
-                        
-                        return (
-                          <button
-                            key={seatNumber}
-                            className={`px-2 py-1 rounded border text-xs transition-all relative ${
-                              isSelected
-                                ? "bg-yendine-teal text-white border-yendine-teal"
-                                : isBlocked || isOccupied
-                                ? "bg-red-100 text-red-600 border-red-300 cursor-not-allowed opacity-60"
-                                : "bg-white hover:bg-gray-100 border-gray-300"
-                            }`}
-                            onClick={() => {
-                              // ENHANCED: Prevent clicking on blocked or occupied seats
-                              if (isBlocked || isOccupied) {
-                                if (timeRemaining > 0) {
-                                  toast.info(`Seat ${seatNumber} is blocked for ${timeRemaining} more minutes`);
-                                } else {
-                                  toast.info(`Seat ${seatNumber} is occupied`);
-                                }
-                                return;
-                              }
-                              
-                              if (isSelected) {
-                                handleSeatDeselect(seatNumber);
-                              } else {
-                                handleSeatSelect(seatNumber);
-                              }
-                            }}
-                            disabled={isBlocked || isOccupied}
-                            type="button"
-                            title={
-                              isBlocked 
-                                ? `Seat ${seatNumber} - BLOCKED\nExpires in ${timeRemaining} minutes\n\nThis seat cannot be selected for ${timeRemaining} more minutes.`
-                                : isOccupied 
-                                ? `Seat ${seatNumber} is occupied`
-                                : `Seat ${seatNumber} - Available`
-                            }
-                          >
-                            {seatNumber}
-                            {/* ENHANCED: Show time remaining overlay for blocked seats */}
-                            {isBlocked && timeRemaining > 0 && (
-                              <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
-                                {timeRemaining > 99 ? '∞' : timeRemaining}
-                              </div>
-                            )}
-                          </button>
-                        );
-                      })
-                    )}
-                  </div>
-                  
-                  {/* Selected Seats Display */}
-                  {selectedSeats.length > 0 && (
-                    <div className="mt-3 p-2 bg-yendine-teal/10 border border-yendine-teal/20 rounded">
-                      <p className="text-xs font-medium text-yendine-teal">
-                        Selected Seats: {selectedSeats.join(', ')}
-                      </p>
-                    </div>
-                  )}
-                  
-                  {/* Seat Legend */}
-                  <div className="mt-3 flex items-center justify-between">
-                    <div className="flex items-center gap-3 text-xs">
-                      <div className="flex items-center gap-1">
-                        <div className="w-3 h-3 bg-white border border-gray-300 rounded"></div>
-                        <span>Available</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <div className="w-3 h-3 bg-yendine-teal rounded"></div>
-                        <span>Selected</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <div className="w-3 h-3 bg-red-100 border border-red-300 rounded opacity-60"></div>
-                        <span>Blocked/Occupied</span>
-                      </div>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={fetchSeatAvailability}
-                      disabled={loadingSeats}
-                      className="text-xs h-6 px-2"
-                    >
-                      {loadingSeats ? "Refreshing..." : "Refresh"}
-                    </Button>
-                  </div>
-                  
-                  {/* Seat Booking Info */}
-                  <div className="mt-2 text-xs text-muted-foreground">
-                    <p>• Seats are optional - you can order without booking</p>
-                    <p>• Seats are reserved for 30 minutes after booking</p>
-                    <p>• You can select multiple seats if needed</p>
-                    <p>• Blocked seats will be available after 30 minutes</p>
-                    <p>• Red seats with timers are currently blocked</p>
-                  </div>
-                </div>
-
-              </CardFooter>
+              <Button
+                className="w-full bg-quicktap-darkGray hover:bg-quicktap-green/90 text-white hover:text-white"
+                onClick={handleCheckout}
+                disabled={cart.length === 0}
+              >
+                Pay Now (₹{getTotalPrice()})
+              </Button>
             </Card>
           </div>
         </div>
-
-        {/* Orders Section */}
-        <div className="mt-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Orders</CardTitle>
-              <CardDescription>Saved orders for your account</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {ordersList.length === 0 ? (
-                <div className="text-center py-6 text-sm text-muted-foreground">No orders yet</div>
-              ) : (
-                <div className="space-y-3">
-                  {ordersList.map((order, idx) => (
-                    <div key={order._id || idx} className="p-3 border rounded-md">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium text-sm">{order.userName || 'You'}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {new Date(order.createdAt || Date.now()).toLocaleString()}
-                          </p>
-                        </div>
-                        <span className="text-sm font-semibold">₹{order.totalAmount}</span>
-                      </div>
-                      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-1 text-xs text-muted-foreground">
-                        {(order.items || []).map((it: any, i: number) => (
-                          <div key={i}>{it.name} ×{it.quantity} (₹{it.price})</div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
+        {/* 
         {/* Payment Options Modal */}
         {showPaymentOptions && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
               <h3 className="text-xl font-bold mb-4">Select Payment Method</h3>
-              
+
               {/* Selected Seats Summary */}
               {selectedSeats.length > 0 && (
-                <div className="mb-4 p-3 bg-yendine-teal/10 border border-yendine-teal/20 rounded">
-                  <p className="text-sm font-medium text-yendine-teal">
+                <div className="mb-4 p-3 bg-quicktap-teal/10 border border-quicktap-teal/20 rounded">
+                  <p className="text-sm font-medium text-quicktap-teal">
                     Selected Seats: {selectedSeats.join(', ')}
                   </p>
                 </div>
               )}
-              
+
               {/* Payment Method Selection */}
               <div className="mb-6">
                 <div className="space-y-3">
@@ -1890,14 +1704,14 @@ export default function Food() {
                     className="w-full justify-start bg-blue-600 hover:bg-blue-700 text-white"
                     onClick={() => handlePaymentMethodSelect("razorpay")}
                   >
-                    <span className="mr-2">💳</span>
+                    <span className="mr-2"><ReceiptIndianRupeeIcon></ReceiptIndianRupeeIcon></span>
                     Pay with Razorpay
                   </Button>
                   <Button
                     className="w-full justify-start bg-green-600 hover:bg-green-700 text-white"
                     onClick={() => handlePaymentMethodSelect("cash")}
                   >
-                    <span className="mr-2">💵</span>
+                    <span className="mr-2"><IndianRupee /></span>
                     Cash on Delivery
                   </Button>
                 </div>
@@ -1944,7 +1758,7 @@ export default function Food() {
                 </div>
               </div>
               <div className="flex gap-3">
-                <Button className="flex-1 bg-yendine-teal hover:bg-yendine-teal/90 text-white" onClick={() => setShowOrderPopup(false)}>
+                <Button className="flex-1 bg-quicktap-teal hover:bg-quicktap-teal/90 text-white" onClick={() => setShowOrderPopup(false)}>
                   Close
                 </Button>
               </div>
@@ -1952,30 +1766,6 @@ export default function Food() {
           </div>
         )}
 
-        {/* Real-Time Payment Component */}
-        {/* Removed RealTimePayment component */}
-
-        {/* Feedbacks Section */}
-        <div className="max-w-md my-4">
-          <textarea
-            ref={feedbackRef}
-            className="w-full p-2 border rounded text-sm transition-all"
-            rows={1}
-            placeholder="Share your feedback..."
-            value={feedback}
-            onChange={handleFeedbackChange}
-            style={{ resize: "none", minHeight: "32px", maxHeight: "160px", overflow: "hidden" }}
-            disabled={submitting}
-          />
-          <Button
-            className="mt-2 bg-yendine-teal hover:bg-yendine-teal/90 text-white"
-            size="sm"
-            onClick={handleSubmitFeedback}
-            disabled={submitting}
-          >
-            {submitting ? "Submitting..." : "Submit Feedback"}
-          </Button>
-        </div>
       </div>
     </DefaultLayout>
   );

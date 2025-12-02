@@ -9,13 +9,15 @@ const featureCards = [
     title: "Food Ordering",
     description: "Order your favorite food from us with just a few clicks.",
     link: "/food",
-    linkText: "Order Food"
+    linkText: "Order Food",
+    imgsrc: "../../public/home/splashburger.jpg"
   },
   {
     title: "Chatbot Assistant",
     description: "Instant answers to your questions about restaurant orders and delivery.",
     link: "/chatbot",
-    linkText: "Ask Questions"
+    linkText: "Ask Questions",
+    imgsrc: "../../public/home/ai.png"
   }
 ];
 
@@ -23,57 +25,61 @@ export default function Home() {
   return (
     <DefaultLayout>
       {/* Hero Section */}
-      <section className=" text-white py-16 md:py-24 w-full">
+      <section className=" text-white py-16 md:py-12 w-full"  >
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl text-black">
-                Welcome to Quick Tap
+            <div className="space-y-2 mt-0">
+              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl text-quicktap-creamy">
+                hola, Quick - Tap
               </h1>
-              <p className="mx-auto max-w-[700px] text-gray-600 md:text-xl font-semibold">
-                Your one-stop platform for dining, community updates, and more.
+              <p className="mx-auto max-w-[300px] text-quicktap-creamy/50 md:text-3xl font-bold">
+                Order food. Shop groceries. Swiggy it!
               </p>
             </div>
+            <div>
+              {/* <img src="../../public/undraw_breakfast_rgx5.svg" alt="" className="size-64" /> */}
+
+            </div>
             <div className="space-x-4">
-              <Button asChild className="bg-yendine-navy hover:bg-yendine-navy/90 text-white">
-                <Link to="/food">Order Food</Link>
+              <Button asChild className="bg-quicktap-creamy hover:bg-quicktap-creamy/60 text-quicktap-green h-[50px] w-[180px]">
+                <Link to="/food" className="text-xl">Order Now</Link>
               </Button>
-              {/* <Button asChild variant="outline" className="bg-yendine-teal hover:bg-yendine-teal/90 text-white">
-                <Link to="/community">Explore Community</Link>
-              </Button> */}
+              <Button asChild className="bg-quicktap-green hover:bg-quicktap-creamy text-quicktap-creamy hover:text-quicktap-teal  border h-[50px] w-[180px]">
+                <Link to="/food" className="text-xl">Brows Menu</Link>
+              </Button>
+
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-12 md:py-16 w-full  ">
+      <section className="py-5 md:py-5 w-full ">
         <div className="container px-4 md:px-6 flex flex-col justify-center items-center">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
-                Everything You Need in One Place
-              </h2>
-              <p className="mx-auto max-w-[700px] text-muted-foreground md:text-lg">
-                Quick Tap integrates essential features to enhance Our customer experience.
-              </p>
-            </div>
-          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 ">
             {featureCards.map((feature, index) => (
-              <Card key={index} className="border border-border hover:shadow-md transition-shadow">
-                <CardHeader>
-                  <CardTitle>{feature.title}</CardTitle>
-                  <CardDescription>{feature.description}</CardDescription>
-                </CardHeader>
-                <CardFooter>
-                  <Button asChild className="w-full bg-yendine-navy hover:bg-yendine-navy/90 text-white">
-                    <Link to={feature.link}>{feature.linkText}</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
+              <Link to={feature.link} key={index}>
+                <Card className="group relative border border-border hover:shadow-md transition-all h-[300px] hover:rounded-xl hover:duration-200 duration-200 rounded-3xl">
+                  <CardHeader className="z-100">
+                    <CardTitle className="text-3xl font-bold">{feature.title}</CardTitle>
+                    <CardDescription className="text-xl text-quicktap-darkGray">
+                      {feature.description}
+                    </CardDescription>
+                  </CardHeader>
+
+                  <CardContent className="flex-1 -z-20">
+                    <img
+                      src={feature.imgsrc}
+                      alt={feature.title}
+                      className="w-[200px] h-[200px] mix-blend-darken -z-12 absolute right-0 top-20 object-cover rounded-xl pointer-events-none select-none 
+                       transition-transform duration-300 group-hover:-translate-y-2"
+                    />
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
+
         </div>
       </section>
     </DefaultLayout>

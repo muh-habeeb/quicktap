@@ -203,7 +203,7 @@ router.post('/upi', async (req, res) => {
     };
 
     // Generate UPI deep link
-    const upiLink = `upi://pay?pa=${upiId}&pn=Yendine%20Food&am=${amount}&cu=INR&tn=${encodeURIComponent(description)}`;
+    const upiLink = `upi://pay?pa=${upiId}&pn=quick-tap%20Food&am=${amount}&cu=INR&tn=${encodeURIComponent(description)}`;
 
     res.json({
       success: true,

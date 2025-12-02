@@ -1,7 +1,7 @@
 {
-  "name": "yendine-server",
+  "name": "quick-tap-server",
   "version": "1.0.0",
-  "description": "Server for Yendine community platform",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

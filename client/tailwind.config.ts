@@ -64,12 +64,20 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				yendine: {
-					navy: 'rgb(5,150,105)',
+				// yendine: {
+				// 	navy: 'rgb(5,150,105)',
+				// 	teal: '#16C79A',
+				// 	orange: '#FF6B6B',
+				// 	lightGray: '#F8F9FA',
+				// 	darkGray: '#343A40'
+				// },
+				quicktap: {
+					green: '#01422c',
 					teal: '#16C79A',
 					orange: '#FF6B6B',
 					lightGray: '#F8F9FA',
-					darkGray: '#343A40'
+					darkGray: '#343A40',
+					creamy:"#FFFDD0",
 				}
 			},
 			borderRadius: {

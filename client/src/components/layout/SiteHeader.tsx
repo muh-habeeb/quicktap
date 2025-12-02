@@ -51,36 +51,36 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-2">
+    <header className="sticky top-0 z-50 w-full border-b backdrop-blur   ">
+      <div className="container flex h-[80px] items-center justify-between">
+        <div className="flex items-center gap-2 justify-center ">
           <Link to="/home" className="flex items-center space-x-2">
-            <span className="text-xl font-bold text-primary">Quick Tap</span>
+            <span className="text-2xl font-bold text-quicktap-creamy  ">Quick Tap</span>
           </Link>
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
-          <Link to="/home" className="text-sm font-medium transition-colors hover:text-primary">
+        <nav className="hidden md:flex items-center gap-6 text-quicktap-creamy">
+          <Link to="/home" className="text-sm font-medium transition-colors hover:text-quicktap-creamy/40">
             Home
           </Link>
-          <Link to="/food" className="text-sm font-medium transition-colors hover:text-primary">
+          <Link to="/food" className="text-sm font-medium transition-colors hover:text-quicktap-creamy/40">
             Food
           </Link>
-          {/* <Link to="/community" className="text-sm font-medium transition-colors hover:text-primary">
+          {/* <Link to="/community" className="text-sm font-medium transition-colors hover:text-quicktap-creamy/40">
             Community
           </Link> */}
           {isAdmin && (
-            <Link to="/scan-qr" className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1">
+            <Link to="/scan-qr" className="text-sm font-medium transition-colors hover:text-quicktap-creamy/40 flex items-center gap-1">
               QR Code
             </Link>
           )}
-          <Link to="/chatbot" className="text-sm font-medium transition-colors hover:text-primary">
+          <Link to="/chatbot" className="text-sm font-medium transition-colors hover:text-quicktap-creamy/40">
             Chatbot
           </Link>
           {isAdmin && (
             <Link to="/admin" className="text-sm font-medium transition-colors hover:text-destructive flex items-center gap-2">
-              <MonitorCogIcon size={16} /> 
+              <MonitorCogIcon size={16} />
               Admin
             </Link>
           )}
@@ -90,28 +90,12 @@ export function SiteHeader() {
         <div className="hidden md:flex items-center gap-4">
           {user ? (
             <div className="flex items-center gap-3">
-              {isAdmin && (
-                <div className="flex items-center gap-2 px-3 py-1 bg-destructive/10 text-destructive rounded-full">
-                  {/* <Shield size={14} /> */}
-                  <span className="text-xs font-medium">Logged as Admin</span>
-                </div>
-              )}
-              <div className="flex items-center gap-2">
-                {user.image && (
-                  <img
-                    src={user.image}
-                    alt={user.name}
-                    className="w-8 h-8 rounded-full"
-                  />
-                )}
-                <span className="text-sm font-medium">{user.name}</span>
-              </div>
               <Button onClick={handleLogout} variant="outline" size="sm">
                 Logout
               </Button>
             </div>
           ) : (
-            <Button asChild variant="default" size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Button asChild variant="default" size="sm" className="bg-quicktap-teal/70 hover:bg-quicktap-teal text-quicktap-creamy">
               <Link to="/">Login</Link>
             </Button>
           )}
@@ -122,7 +106,7 @@ export function SiteHeader() {
           <Button
             variant="outline"
             size="sm"
-            className="px-2 hover:bg-yendine-navy hover:text-white hover:duration-200 duration-200"
+            className="px-2 hover:bg-quicktap-green hover:text-white hover:duration-200 duration-200"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
@@ -133,25 +117,25 @@ export function SiteHeader() {
 
       {/* Mobile Navigation */}
       {isMenuOpen && (
-        <div className="md:hidden border-t py-4 px-6 bg-background">
+        <div className="md:hidden border-t py-4 px-6 text-quicktap-lightGray hover:text-quicktap-creamy">
           <nav className="flex flex-col space-y-4">
             <Link
               to="/home"
-              className="text-base font-medium transition-colors hover:text-primary"
+              className="text-base font-medium transition-colors hover:text-quicktap-creamy/40"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
             <Link
               to="/food"
-              className="text-base font-medium transition-colors hover:text-primary"
+              className="text-base font-medium transition-colors hover:text-quicktap-creamy/40"
               onClick={() => setIsMenuOpen(false)}
             >
               Food
             </Link>
             <Link
               to="/community"
-              className="text-base font-medium transition-colors hover:text-primary"
+              className="text-base font-medium transition-colors hover:text-quicktap-creamy/40"
               onClick={() => setIsMenuOpen(false)}
             >
               Community
@@ -159,7 +143,7 @@ export function SiteHeader() {
             {isAdmin && (
               <Link
                 to="/scan-qr"
-                className="text-base font-medium transition-colors hover:text-primary flex items-center gap-2"
+                className="text-base font-medium transition-colors hover:text-quicktap-creamy/40 flex items-center gap-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 QR Code
@@ -167,7 +151,7 @@ export function SiteHeader() {
             )}
             <Link
               to="/chatbot"
-              className="text-base font-medium transition-colors hover:text-primary"
+              className="text-base font-medium transition-colors hover:text-quicktap-creamy/40"
               onClick={() => setIsMenuOpen(false)}
             >
               Chatbot
@@ -185,25 +169,11 @@ export function SiteHeader() {
 
             {user ? (
               <div className="space-y-3 pt-4 border-t">
-                {isAdmin && (
-                  <div className="flex items-center gap-2 px-3 py-2 bg-destructive/10 text-destructive rounded-lg">
-                    <span className="text-sm font-medium">Logged as Admin</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-3">
-                  {user.image && (
-                    <img
-                      src={user.image}
-                      alt={user.name}
-                      className="w-8 h-8 rounded-full"
-                    />
-                  )}
-                  <span className="text-sm font-medium">{user.name}</span>
-                </div>
+
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-full"
+                  className="w-full bg-quicktap-teal "
                   onClick={handleLogout}
                 >
                   Logout

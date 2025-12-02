@@ -99,6 +99,7 @@ export default function Admin() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [orderStats, setOrderStats] = useState<any>(null);
   const [isAddFoodDialogOpen, setIsAddFoodDialogOpen] = useState(false);
   const [isEditFoodDialogOpen, setIsEditFoodDialogOpen] = useState(false);
@@ -158,7 +159,7 @@ export default function Admin() {
       <DefaultLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className="flex flex-col items-center space-y-4">
-            <Loader2 className="h-8 w-8 animate-spin text-yendine-navy" />
+            <Loader2 className="h-8 w-8 animate-spin text-quicktap-navy" />
             <p className="text-muted-foreground">Verifying admin access...</p>
           </div>
         </div>
@@ -506,7 +507,7 @@ export default function Admin() {
       <div className="container py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Admin Panel</h1>
-          <Badge className="bg-yendine-navy text-white">Admin Access</Badge>
+          <Badge className="bg-quicktap-navy text-white">Admin Access</Badge>
         </div>
 
         <Tabs value={selectedTab} onValueChange={setSelectedTab} >
@@ -601,7 +602,7 @@ export default function Admin() {
                   <div className="flex gap-4">
                     <Button
                       type="submit"
-                      className="bg-yendine-orange hover:bg-yendine-orange/90 text-white"
+                      className="bg-quicktap-orange hover:bg-quicktap-orange/90 text-white"
                     >
                       Send to All Users
                     </Button>
@@ -734,7 +735,7 @@ export default function Admin() {
                 </div>
                 <Dialog open={isAddFoodDialogOpen} onOpenChange={setIsAddFoodDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button className="bg-yendine-navy hover:bg-yendine-navy/90 text-white">
+                    <Button className="bg-quicktap-navy hover:bg-quicktap-navy/90 text-white">
                       Add Food Item
                     </Button>
                   </DialogTrigger>
@@ -805,7 +806,7 @@ export default function Admin() {
                       </div>
                       <Button
                         type="submit"
-                        className="w-full bg-yendine-navy hover:bg-yendine-navy/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-quicktap-navy hover:bg-quicktap-navy/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={isAddingFood}
                       >
                         {isAddingFood ? (
@@ -1068,7 +1069,7 @@ export default function Admin() {
               </div>
               <Button
                 type="submit"
-                className="w-full bg-yendine-navy hover:bg-yendine-navy/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-quicktap-navy hover:bg-quicktap-navy/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={isEditingFood}
               >
                 {isEditingFood ? (
