@@ -44,46 +44,8 @@ const GoogleLogin = (props) => {
             console.log('Valid JWT token received. Setting user data:', { email, name, image, tokenLength: token.length });
             localStorage.setItem('user-info', JSON.stringify(obj));
             setUser(obj);
-            console.log('✅ User data saved to localStorage');
-            
-            // Give localStorage time to persist, then check redirect
-            setTimeout(() => {
-              console.log('🔍 [GoogleLogin] Checking for redirectAfterLogin in localStorage...');
-              console.log('🔍 [GoogleLogin] Current localStorage contents:', {
-                'user-info': localStorage.getItem('user-info') ? '✓ Set' : '✗ Missing',
-                'redirectAfterLogin': localStorage.getItem('redirectAfterLogin') || '✗ Missing'
-              });
-              
-              let redirectUrl = localStorage.getItem('redirectAfterLogin');
-              console.log('📍 [GoogleLogin] redirectUrl from localStorage:', redirectUrl);
-              
-              // Fallback: Check if there are UTM params in current URL or referrer
-              if (!redirectUrl) {
-                console.log('⚠️ [GoogleLogin] No stored redirect, checking current URL for UTM params...');
-                const searchParams = new URLSearchParams(window.location.search);
-                const utmSource = searchParams.get('utm_source');
-                const utmRef = searchParams.get('ref');
-                console.log('🔎 [GoogleLogin] Current URL params - utm_source:', utmSource, 'ref:', utmRef);
-                
-                if (utmSource || utmRef) {
-                  const params = [];
-                  if (utmSource) params.push(`utm_source=${utmSource}`);
-                  if (utmRef) params.push(`ref=${utmRef}`);
-                  redirectUrl = `/food?${params.join('&')}`;
-                  console.log('🔨 [GoogleLogin] Constructed fallback redirectUrl:', redirectUrl);
-                }
-              }
-              
-              if (redirectUrl) {
-                console.log('✅ [GoogleLogin] Redirecting to:', redirectUrl);
-                localStorage.removeItem('redirectAfterLogin'); // Clean up
-                navigate(redirectUrl, { replace: true });
-              } else {
-                console.log('⚠️ [GoogleLogin] No redirectUrl found, navigating to home page...');
-                navigate('/home', { replace: true });
-              }
-            }, 200);
-
+            console.log('User data saved to localStorage. Navigating to home page...');
+            navigate('/home', { replace: true });
           } else {
             console.error('Invalid response structure:', result.data);
             setError('Invalid response from server - missing user or token');
@@ -120,7 +82,7 @@ const GoogleLogin = (props) => {
           <CardContent className="space-y-4">
             <Button 
               className="w-full flex items-center justify-center gap-2 bg-white text-gray-800 hover:bg-gray-100 border border-gray-300" 
-              onClick={googleLogin}
+              onClick={() => googleLogin()}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-mail">
                 <rect width="20" height="16" x="2" y="4" rx="2" />
@@ -151,7 +113,7 @@ const GoogleLogin = (props) => {
             )}
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button asChild className="w-full bg-yendine-navy hover:bg-yendine-navy/90 text-white">
+            <Button asChild className="w-full bg-emerald-600 hover:bg-emerald-700 text-white">
               <Link to="/">Back to Home</Link>
             </Button>
           </CardFooter>

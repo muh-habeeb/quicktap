@@ -1,5 +1,6 @@
 
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
 	darkMode: ["class"],
@@ -64,7 +65,7 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				yendine: {
-					navy: '#0F3460',
+					navy: 'rgb(5,150,105)',
 					teal: '#16C79A',
 					orange: '#FF6B6B',
 					lightGray: '#F8F9FA',
@@ -100,5 +101,5 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [tailwindcssAnimate],
 } satisfies Config;

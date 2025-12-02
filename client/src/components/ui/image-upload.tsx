@@ -109,11 +109,11 @@ export function ImageUpload({
 
   return (
     <div className={`space-y-2 ${className}`}>
-      <Label>{label} {required && <span className="text-red-500">*</span>}</Label>
+      <Label>{label} {required && <span className="text-destructive">*</span>}</Label>
       
       {/* Error Message */}
       {error && (
-        <div className="flex items-center gap-2 text-red-500 text-sm">
+        <div className="flex items-center gap-2 text-destructive text-sm">
           <AlertCircle className="w-4 h-4" />
           {error}
         </div>
@@ -144,9 +144,9 @@ export function ImageUpload({
       <div
         className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
           isDragOver 
-            ? 'border-blue-500 bg-blue-50' 
+            ? 'border-primary bg-primary/10' 
             : error
-            ? 'border-red-300 bg-red-50'
+            ? 'border-destructive/30 bg-destructive/10'
             : 'border-gray-300 hover:border-gray-400'
         }`}
         onDrop={handleDrop}
@@ -155,7 +155,7 @@ export function ImageUpload({
       >
         <div className="space-y-4">
           <div className="flex justify-center">
-            <ImageIcon className={`w-8 h-8 ${error ? 'text-red-400' : 'text-gray-400'}`} />
+            <ImageIcon className={`w-8 h-8 ${error ? 'text-destructive' : 'text-gray-400'}`} />
           </div>
           
           <div className="space-y-2">

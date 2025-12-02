@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import GoogleLogin from "./pages/GoogleLogin";
 import { AdminRoute } from "./components/AdminRoute";
+import QRCodeScanner from "./components/QRCodeScanner";
 
 const queryClient = new QueryClient();
 
@@ -28,7 +29,16 @@ const App = () => {
 
   const PrivateRoute = ({ element }) => {
     const userInfo = localStorage.getItem('user-info');
-    return userInfo ? element : <Navigate to="/" />;
+    
+    if (!userInfo) {
+      // User not authenticated - store the current URL with params for redirect after login
+      const currentUrl = window.location.pathname + window.location.search;
+      console.log('🔐 [PrivateRoute] User not authenticated. Storing redirect URL:', currentUrl);
+      localStorage.setItem('redirectAfterLogin', currentUrl);
+      return <Navigate to="/" replace />;
+    }
+    
+    return element;
   };
 
   return (
@@ -38,19 +48,20 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route 
-              path="/" 
+            <Route
+              path="/"
               element={
-                <GoogleOAuthProvider clientId="303284873713-63bse0ipv47apcr7d4v14bvc2u4naon9.apps.googleusercontent.com">
+                <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
                   <GoogleLogin />
                 </GoogleOAuthProvider>
-              } 
+              }
             />
             <Route path='/home' element={<PrivateRoute element={<Home />} />} />
             <Route path="/food" element={<PrivateRoute element={<Food />} />} />
             <Route path="/community" element={<PrivateRoute element={<Community />} />} />
             <Route path="/chatbot" element={<PrivateRoute element={<Chatbot />} />} />
             <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
+            <Route path="/scan-qr" element={<QRCodeScanner onScanSuccess={() => {}} onClose={() => {}} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

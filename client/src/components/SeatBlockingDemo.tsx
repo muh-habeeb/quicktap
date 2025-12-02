@@ -73,11 +73,11 @@ export default function SeatBlockingDemo({ onClose }: SeatBlockingDemoProps) {
     const status = getSeatStatus(seatNumber);
     switch (status) {
       case 'selected':
-        return 'bg-blue-500 text-white border-blue-500';
+        return 'bg-accent text-accent-foreground border-accent';
       case 'blocked':
-        return 'bg-red-500 text-white border-red-500';
+        return 'bg-destructive text-destructive-foreground border-destructive';
       default:
-        return 'bg-green-500 text-white border-green-500 hover:bg-green-600';
+        return 'bg-primary text-primary-foreground border-primary hover:bg-primary/90';
     }
   };
 
@@ -161,9 +161,9 @@ export default function SeatBlockingDemo({ onClose }: SeatBlockingDemoProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Instructions */}
-        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <h4 className="font-medium text-blue-800 mb-2">📋 How to Test:</h4>
-          <ol className="text-sm text-blue-700 space-y-1 list-decimal list-inside">
+        <div className="p-3 bg-secondary border border-primary/20 rounded-lg">
+          <h4 className="font-medium text-primary mb-2">📋 How to Test:</h4>
+          <ol className="text-sm text-primary space-y-1 list-decimal list-inside">
             <li>Click on any available seat to select it</li>
             <li>Click "Block Selected Seats" to simulate a 30-minute booking</li>
             <li>Try to click on blocked seats - they won't be selectable</li>
@@ -182,7 +182,7 @@ export default function SeatBlockingDemo({ onClose }: SeatBlockingDemoProps) {
               selectedSeats.forEach(seat => blockSeat(seat));
               setSelectedSeats([]);
             }}
-            className="bg-red-600 hover:bg-red-700"
+            className="bg-destructive hover:bg-destructive/90"
           >
             🚫 Block Selected Seats (30 min)
           </Button>
@@ -203,15 +203,15 @@ export default function SeatBlockingDemo({ onClose }: SeatBlockingDemoProps) {
         {/* Legend */}
         <div className="flex gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-green-500 rounded"></div>
+            <div className="w-3 h-3 bg-primary rounded"></div>
             <span>Available</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-blue-500 rounded"></div>
+            <div className="w-3 h-3 bg-accent rounded"></div>
             <span>Selected</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-red-500 rounded"></div>
+            <div className="w-3 h-3 bg-destructive rounded"></div>
             <span>Blocked (30 min)</span>
           </div>
         </div>
@@ -225,25 +225,25 @@ export default function SeatBlockingDemo({ onClose }: SeatBlockingDemoProps) {
 
         {/* Status Summary */}
         <div className="grid grid-cols-3 gap-4">
-          <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-center">
-            <div className="text-2xl font-bold text-green-600">
+          <div className="p-3 bg-primary/10 border border-primary/20 rounded-lg text-center">
+            <div className="text-2xl font-bold text-primary">
               {50 - blockedSeats.length - selectedSeats.length}
             </div>
-            <div className="text-sm text-green-700">Available Seats</div>
+            <div className="text-sm text-primary/80">Available Seats</div>
           </div>
           
-          <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-center">
-            <div className="text-2xl font-bold text-blue-600">
+          <div className="p-3 bg-accent/10 border border-accent/20 rounded-lg text-center">
+            <div className="text-2xl font-bold text-accent">
               {selectedSeats.length}
             </div>
-            <div className="text-sm text-blue-700">Selected Seats</div>
+            <div className="text-sm text-accent/80">Selected Seats</div>
           </div>
           
-          <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-center">
-            <div className="text-2xl font-bold text-red-600">
+          <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-center">
+            <div className="text-2xl font-bold text-destructive">
               {blockedSeats.length}
             </div>
-            <div className="text-sm text-red-700">Blocked Seats</div>
+            <div className="text-sm text-destructive/80">Blocked Seats</div>
           </div>
         </div>
 
@@ -262,12 +262,12 @@ export default function SeatBlockingDemo({ onClose }: SeatBlockingDemoProps) {
                     className={`p-2 border rounded text-sm ${
                       isExpiringSoon 
                         ? 'bg-orange-50 border-orange-200' 
-                        : 'bg-red-50 border-red-200'
+                        : 'bg-destructive/10 border-destructive/20'
                     }`}
                   >
                     <div className="font-medium">Seat {seatNumber}</div>
                     <div className={`font-bold ${
-                      isExpiringSoon ? 'text-orange-600' : 'text-red-600'
+                      isExpiringSoon ? 'text-destructive' : 'text-destructive/50'
                     }`}>
                       {timeRemaining}m remaining
                     </div>

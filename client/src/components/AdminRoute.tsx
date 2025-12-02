@@ -36,7 +36,7 @@ export const AdminRoute = ({ children }: AdminRouteProps) => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
-          <Loader2 className="h-8 w-8 animate-spin text-yendine-navy" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
           <p className="text-muted-foreground">Checking admin access...</p>
         </div>
       </div>
@@ -48,8 +48,8 @@ export const AdminRoute = ({ children }: AdminRouteProps) => {
       <div className="min-h-screen flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-              <AlertCircle className="h-6 w-6 text-red-600" />
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+              <AlertCircle className="h-6 w-6 text-destructive" />
             </div>
             <CardTitle className="text-xl">Access Error</CardTitle>
             <CardDescription>

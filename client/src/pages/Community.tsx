@@ -337,7 +337,9 @@ export default function Community() {
         const parsed = JSON.parse(stored);
         setCurrentUser({ id: parsed.email || 'guest', name: parsed.name || 'You', avatar: parsed.image || '/placeholder.svg' });
       }
-    } catch {}
+    } catch (error) {
+      console.error("Error loading user info from localStorage:", error);
+    }
   }, []);
 
   // Load posts from API (and announcements mapped as posts)
@@ -435,7 +437,7 @@ export default function Community() {
   const handleLikePost = async (postId) => {
     try {
       const updatedPost = await postService.toggleLike(postId, currentUser.id);
-      setPosts(posts.map(post => 
+      setPosts(posts.map(post =>
         post._id === postId ? updatedPost : post
       ));
       toast.success(updatedPost.likedBy.includes(currentUser.id) ? "Post liked!" : "Post unliked");
@@ -455,7 +457,7 @@ export default function Community() {
       };
 
       const updatedPost = await postService.addComment(postId, commentData);
-      setPosts(posts.map(post => 
+      setPosts(posts.map(post =>
         post._id === postId ? updatedPost : post
       ));
       toast.success("Comment added successfully!");
@@ -481,7 +483,7 @@ export default function Community() {
   const handleDeleteComment = async (postId, commentId) => {
     try {
       const updatedPost = await postService.deleteComment(postId, commentId);
-      setPosts(posts.map(post => 
+      setPosts(posts.map(post =>
         post._id === postId ? updatedPost : post
       ));
       toast.success("Comment deleted successfully!");

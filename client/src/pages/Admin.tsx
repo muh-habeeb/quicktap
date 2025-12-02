@@ -499,8 +499,8 @@ export default function Admin() {
           <Badge className="bg-yendine-navy text-white">Admin Access</Badge>
         </div>
         
-        <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-          <TabsList className="grid grid-cols-8 mb-8">
+        <Tabs value={selectedTab} onValueChange={setSelectedTab} >
+          <TabsList className="flex flex-wrap lg:grid lg:grid-cols-8 mb-8 w-full h-full ">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="orders">Food Orders</TabsTrigger>
             <TabsTrigger value="foods">Food Management</TabsTrigger>

@@ -3,11 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import PaymentService from '@/services/paymentService';
-import QRCodeScanner from './QRCodeScanner';
 
 interface RealTimePaymentProps {
   amount: number;
   orderId: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onPaymentSuccess: (paymentData: any) => void;
   onPaymentFailure: (error: string) => void;
   onClose: () => void;
@@ -42,7 +42,7 @@ const RealTimePayment: React.FC<RealTimePaymentProps> = ({
   const handleRazorpayPayment = async () => {
     try {
       setLoading(true);
-      
+
       // Create Razorpay order
       const orderResponse = await PaymentService.createRazorpayOrder({
         amount,
@@ -58,14 +58,29 @@ const RealTimePayment: React.FC<RealTimePaymentProps> = ({
         throw new Error('Failed to create payment order');
       }
 
+      // Get user data from localStorage
+      let userName = 'Customer';
+      let userEmail = '';
+      const userInfo = localStorage.getItem('user-info');
+      if (userInfo) {
+        try {
+          const user = JSON.parse(userInfo);
+          userName = user.name || 'Customer';
+          userEmail = user.email || '';
+        } catch (error) {
+          console.error('Error parsing user info:', error);
+        }
+      }
+
       // Initialize Razorpay payment
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: orderResponse.order.amount,
         currency: orderResponse.order.currency,
-        name: 'Yendine Food',
+        name: 'Quick Tap',
         description: 'Food order payment',
         order_id: orderResponse.order.id,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: async (response: any) => {
           try {
             // Verify payment
@@ -89,15 +104,15 @@ const RealTimePayment: React.FC<RealTimePaymentProps> = ({
           }
         },
         prefill: {
-          name: 'Customer Name',
-          email: 'customer@example.com',
-          contact: '9999999999',
+          name: userName,
+          email: userEmail,
         },
         theme: {
-          color: '#10B981',
+          color: 'oklch(0.484 0.167 149.214)',
         },
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const razorpay = new (window as any).Razorpay(options);
       razorpay.open();
     } catch (error) {
@@ -110,37 +125,37 @@ const RealTimePayment: React.FC<RealTimePaymentProps> = ({
   };
 
   // Handle UPI payment
-  const handleUPIPayment = async () => {
-    try {
-      setLoading(true);
-      
-      const upiResponse = await PaymentService.createUPIPayment({
-        amount,
-        upiId: 'yendine@upi', // Replace with your actual UPI ID
-        description: `Food order - ${orderId}`,
-        orderId,
-      });
+  // const handleUPIPayment = async () => {
+  //   try {
+  //     setLoading(true);
 
-      if (upiResponse.success) {
-        setPaymentId(upiResponse.paymentId);
-        setQrCodeData(upiResponse.qrData);
-        setPaymentStatus('pending');
-        
-        // Start real-time status monitoring
-        startPaymentMonitoring(upiResponse.paymentId);
-        
-        toast.success('UPI payment initiated');
-      } else {
-        throw new Error('Failed to create UPI payment');
-      }
-    } catch (error) {
-      console.error('UPI payment error:', error);
-      onPaymentFailure('Failed to create UPI payment');
-      toast.error('Failed to create UPI payment');
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     const upiResponse = await PaymentService.createUPIPayment({
+  //       amount,
+  //       upiId: 'yendine@upi', // Replace with your actual UPI ID
+  //       description: `Food order - ${orderId}`,
+  //       orderId,
+  //     });
+
+  //     if (upiResponse.success) {
+  //       setPaymentId(upiResponse.paymentId);
+  //       setQrCodeData(upiResponse.qrData);
+  //       setPaymentStatus('pending');
+
+  //       // Start real-time status monitoring
+  //       startPaymentMonitoring(upiResponse.paymentId);
+
+  //       toast.success('UPI payment initiated');
+  //     } else {
+  //       throw new Error('Failed to create UPI payment');
+  //     }
+  //   } catch (error) {
+  //     console.error('UPI payment error:', error);
+  //     onPaymentFailure('Failed to create UPI payment');
+  //     toast.error('Failed to create UPI payment');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   // Start real-time payment monitoring
   const startPaymentMonitoring = (paymentId: string) => {
@@ -148,7 +163,7 @@ const RealTimePayment: React.FC<RealTimePaymentProps> = ({
     const pollInterval = setInterval(async () => {
       try {
         const statusResponse = await PaymentService.getPaymentStatus(paymentId);
-        
+
         if (statusResponse.success) {
           if (statusResponse.status === 'success') {
             setPaymentStatus('success');
@@ -185,7 +200,7 @@ const RealTimePayment: React.FC<RealTimePaymentProps> = ({
   const handleQRScanSuccess = (result: string) => {
     setScannedData(result);
     setShowQRScanner(false);
-    
+
     // Check if it's a UPI QR code
     if (result.startsWith('upi://')) {
       // Extract payment details from UPI QR code
@@ -193,7 +208,7 @@ const RealTimePayment: React.FC<RealTimePaymentProps> = ({
       const amount = upiUrl.searchParams.get('am');
       const payeeId = upiUrl.searchParams.get('pa');
       const payeeName = upiUrl.searchParams.get('pn');
-      
+
       if (amount && payeeId) {
         toast.success(`QR Code scanned! Amount: ₹${amount}`);
         // Process the scanned UPI payment
@@ -252,27 +267,27 @@ const RealTimePayment: React.FC<RealTimePaymentProps> = ({
             <div className="space-y-3">
               <p className="text-lg font-semibold">Amount: ₹{amount}</p>
               <Button
-                className="w-full bg-green-600 hover:bg-green-700 text-white"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                 onClick={() => setPaymentMethod('razorpay')}
                 disabled={loading}
               >
                 💳 Pay with Razorpay
               </Button>
-                             <Button
-                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                 onClick={() => setPaymentMethod('upi')}
-                 disabled={loading}
-               >
-                 📱 Pay with UPI
-               </Button>
-               <Button
-                 className="w-full bg-orange-600 hover:bg-orange-700 text-white"
-                 onClick={() => setShowQRScanner(true)}
-                 disabled={loading}
-               >
-                 📷 Scan QR Code
-               </Button>
-               
+              <Button
+                className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
+                onClick={() => setPaymentMethod('upi')}
+                disabled={loading}
+              >
+                💱 Pay with UPI
+              </Button>
+              <Button
+                className="w-full bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                onClick={() => setShowQRScanner(true)}
+                disabled={loading}
+              >
+                📷 Scan QR Code
+              </Button>
+
               <Button
                 variant="outline"
                 className="w-full"
@@ -286,7 +301,7 @@ const RealTimePayment: React.FC<RealTimePaymentProps> = ({
             <div className="space-y-4">
               <p className="text-center">Redirecting to Razorpay...</p>
               <Button
-                className="w-full bg-green-600 hover:bg-green-700 text-white"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                 onClick={handleRazorpayPayment}
                 disabled={loading}
               >
@@ -319,30 +334,30 @@ const RealTimePayment: React.FC<RealTimePaymentProps> = ({
                       Scan this QR code with any UPI app
                     </p>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Button
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                      className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
                       onClick={openUPIApp}
                     >
                       Open UPI App
                     </Button>
-                    
+
                     {paymentStatus === 'pending' && (
                       <div className="text-center">
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto mb-2"></div>
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-accent mx-auto mb-2"></div>
                         <p className="text-sm text-gray-600">Waiting for payment...</p>
                       </div>
                     )}
-                    
+
                     {paymentStatus === 'success' && (
-                      <div className="text-center text-green-600">
+                      <div className="text-center text-primary">
                         <p>✅ Payment Successful!</p>
                       </div>
                     )}
-                    
+
                     {paymentStatus === 'failed' && (
-                      <div className="text-center text-red-600">
+                      <div className="text-center text-destructive">
                         <p>❌ Payment Failed</p>
                       </div>
                     )}
@@ -354,7 +369,7 @@ const RealTimePayment: React.FC<RealTimePaymentProps> = ({
                   <p>Initializing UPI payment...</p>
                 </div>
               )}
-              
+
               <Button
                 variant="outline"
                 className="w-full"
@@ -366,15 +381,6 @@ const RealTimePayment: React.FC<RealTimePaymentProps> = ({
           )}
         </CardContent>
       </Card>
-
-      {/* QR Code Scanner */}
-      {showQRScanner && (
-        <QRCodeScanner
-          onScanSuccess={handleQRScanSuccess}
-          onClose={() => setShowQRScanner(false)}
-        />
-      )}
-
 
     </div>
   );

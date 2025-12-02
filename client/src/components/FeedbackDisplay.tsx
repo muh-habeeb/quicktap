@@ -162,7 +162,7 @@ export function FeedbackDisplay({
                       variant="ghost"
                       size="sm"
                       onClick={() => handleDelete(item._id)}
-                      className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      className="text-destructive hover:text-destructive/80 hover:bg-destructive/10"
                     >
                       Delete
                     </Button>

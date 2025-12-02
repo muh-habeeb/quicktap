@@ -3,15 +3,15 @@ import { Link } from "react-router-dom";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t bg-background">
+    <footer className="border-t [border-width:5px] border-border ">
       <div className="container py-8 md:py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <Link to="/" className="flex items-center space-x-2">
-              <span className="text-xl font-bold text-yendine-navy">YEN-DINE</span>
+              <span className="text-xl font-bold text-primary">Quick-Tap</span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">
-              The official food ordering and community platform for Yenepoya University.
+              Your one-stop platform for food delivery, convenience, and community engagement.
             </p>
           </div>
           
@@ -29,14 +29,14 @@ export function SiteFooter() {
                     Food Ordering
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to="/community" className="text-sm text-muted-foreground hover:text-foreground">
                     Community
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link to="/chatbot" className="text-sm text-muted-foreground hover:text-foreground">
-                    Campus Chatbot
+                    Ai assistant
                   </Link>
                 </li>
               </ul>
@@ -61,7 +61,7 @@ export function SiteFooter() {
           <div className="space-y-3">
             <h3 className="text-sm font-medium">Stay Connected</h3>
             <p className="text-sm text-muted-foreground">
-              Follow Yenepoya University for updates and announcements.
+              Follow us on social media for the latest updates and announcements.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-muted-foreground hover:text-foreground">
@@ -79,7 +79,7 @@ export function SiteFooter() {
         
         <div className="mt-8 border-t pt-6 flex flex-col md:flex-row items-center justify-between">
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} Yenepoya University. All rights reserved.
+            &copy; {new Date().getFullYear()} Quick Tap. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <Link to="/privacy" className="text-xs text-muted-foreground hover:text-foreground">

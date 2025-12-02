@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import { FeedbackService } from "@/services/feedbackService";
 import { SeatService } from "@/services/seatService";
 import { CartService, Cart, CartItem } from "@/services/cartService";
@@ -753,6 +754,8 @@ function extractFoodDetails(orderItem: any) {
 }
 
 export default function Food() {
+  const navigate = useNavigate();
+  
   const [cart, setCart] = useState<LocalCartItem[]>([]);
   const [dbCart, setDbCart] = useState<Cart | null>(null);
   const [activeDay, setActiveDay] = useState("monday");
@@ -777,6 +780,10 @@ export default function Food() {
   const [ordersList, setOrdersList] = useState<any[]>([]);
   const [showOrderPopup, setShowOrderPopup] = useState(false);
   const [lastOrder, setLastOrder] = useState<any | null>(null);
+
+  // Note: Authentication is handled by PrivateRoute in App.tsx
+  // This component will only render if user is logged in
+
 
   // Get user ID from localStorage
   const getUserId = () => {

@@ -23,7 +23,7 @@ export const config = {
   googleClientId: import.meta.env.VITE_GOOGLE_CLIENT_ID || '',
   
   // App configuration
-  appName: 'Yendine',
+  appName: 'quick-tap',
   version: '1.0.0'
 };
 

@@ -1,132 +1,184 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import { Download, Copy, QrCode, Smartphone } from 'lucide-react';
+import * as QRCodeLib from 'qrcode.react';
+import { DefaultLayout } from './layout/DefaultLayout';
 
-interface QRCodeScannerProps {
-  onScanSuccess: (result: string) => void;
-  onClose: () => void;
+interface QRCodeGeneratorProps {
+  onClose?: () => void;
 }
 
-const QRCodeScanner: React.FC<QRCodeScannerProps> = ({ onScanSuccess, onClose }) => {
-  const [isScanning, setIsScanning] = useState(false);
-  const [error, setError] = useState<string>('');
-  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
-  const scannerContainerRef = useRef<HTMLDivElement>(null);
+const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ onClose }) => {
+  const [mode, setMode] = useState<'generate' | 'scan'>('generate');
+  const [generatedLink, setGeneratedLink] = useState('');
+  const [qrValue, setQrValue] = useState('');
+  const qrRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    startScanner();
-    return () => {
-      stopScanner();
-    };
-  }, []);
+  const generateQRCode = () => {
+    const baseUrl = window.location.origin;
+    // Generate link that directs to order page after login
+    const orderPageLink = `${baseUrl}/food?utm_source=qr&ref=menu`;
+    setQrValue(orderPageLink);
+    setGeneratedLink(orderPageLink);
+    toast.success('QR Code generated successfully!');
+  };
 
-  const startScanner = () => {
-    try {
-      if (scannerContainerRef.current) {
-        scannerRef.current = new Html5QrcodeScanner(
-          "qr-reader",
-          {
-            fps: 10,
-            qrbox: { width: 250, height: 250 },
-            aspectRatio: 1.0,
-          },
-          false
-        );
+  const downloadQRCode = () => {
+    if (!qrRef.current) return;
 
-        scannerRef.current.render(
-          (decodedText: string) => {
-            // QR code successfully scanned
-            toast.success('QR Code detected!');
-            onScanSuccess(decodedText);
-            stopScanner();
-          },
-          (errorMessage: string) => {
-            // QR code scanning error (not a failure, just no QR code found)
-            console.log('QR scanning in progress...');
-          }
-        );
+    const svg = qrRef.current.querySelector('svg');
+    if (svg) {
+      // Convert SVG to canvas then download as PNG
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const img = new Image();
 
-        setIsScanning(true);
-        setError('');
-      }
-    } catch (err) {
-      console.error('Error starting scanner:', err);
-      setError('Failed to start camera. Please check camera permissions.');
-      toast.error('Failed to start camera');
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx?.drawImage(img, 0, 0);
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = 'order-qr-code.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast.success('QR Code downloaded!');
+      };
+
+      img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
     }
   };
 
-  const stopScanner = () => {
-    if (scannerRef.current) {
-      try {
-        scannerRef.current.clear();
-        scannerRef.current = null;
-      } catch (err) {
-        console.error('Error stopping scanner:', err);
-      }
-    }
-    setIsScanning(false);
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(generatedLink);
+    toast.success('Link copied to clipboard!');
   };
 
-  const handleRetry = () => {
-    setError('');
-    startScanner();
-  };
+  return (<DefaultLayout>
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <Card className="w-full max-w-md mx-4">
+    <div className="w-full max-w-2xl mx-auto mt-10">
+      <Card>
         <CardHeader>
-          <CardTitle className="text-xl">Scan QR Code</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <QrCode size={24} />
+            QR Code Manager
+          </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {error ? (
-            <div className="text-center space-y-4">
-              <div className="text-red-500 text-sm">{error}</div>
-              <Button onClick={handleRetry} className="w-full">
-                Retry Camera
-              </Button>
-              <Button variant="outline" onClick={onClose} className="w-full">
-                Cancel
-              </Button>
-            </div>
-          ) : (
-            <>
-              <div className="text-center mb-4">
-                <p className="text-sm text-gray-600 mb-2">
-                  Position the QR code within the frame
+        <CardContent className="space-y-6">
+          {/* Mode Selection */}
+          <div className="flex gap-2">
+            <Button
+              variant={mode === 'generate' ? 'default' : 'outline'}
+              onClick={() => setMode('generate')}
+              className="flex-1"
+            >
+              <QrCode size={18} className="mr-2" />
+              Generate QR
+            </Button>
+            <Button
+              variant={mode === 'scan' ? 'default' : 'outline'}
+              onClick={() => setMode('scan')}
+              className="flex-1"
+            >
+              <Smartphone size={18} className="mr-2" />
+              Scan QR
+            </Button>
+          </div>
+          {/* Generate Mode */}
+          {mode === 'generate' && (
+            <div className="space-y-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p className="text-sm text-blue-800">
+                  ℹ️ This QR code will redirect users to the order page after they login.
                 </p>
-                {isScanning && (
-                  <div className="flex items-center justify-center gap-2 text-green-600">
-                    <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
-                    <span className="text-sm">Scanning...</span>
+              </div>
+              <Button
+                onClick={generateQRCode}
+                className="w-full bg-primary hover:bg-primary/90"
+                size="lg"
+              >
+                Generate QR Code
+              </Button>
+              {qrValue && (
+                <div className="space-y-4">
+                  {/* QR Code Display */}
+                  <div className="flex justify-center p-6 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                    <div ref={qrRef}>
+                      <QRCodeLib.QRCodeSVG
+                        value={qrValue}
+                        size={256}
+                        level="H"
+                        includeMargin={true}
+                        fgColor="#000000"
+                        bgColor="#ffffff"
+                      />
+                    </div>
                   </div>
-                )}
-              </div>
-              
-              <div 
-                id="qr-reader" 
-                ref={scannerContainerRef}
-                className="w-full"
-              ></div>
-              
-              <div className="space-y-2">
-                <Button 
-                  variant="outline" 
-                  onClick={onClose} 
-                  className="w-full"
-                >
-                  Cancel
-                </Button>
-              </div>
-            </>
+                  {/* Link Display */}
+                  <div className="space-y-2">
+                    <Label>Generated Link</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="text"
+                        value={generatedLink}
+                        readOnly
+                        className="text-xs"
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={copyToClipboard}
+                      >
+                        <Copy size={16} />
+                      </Button>
+                    </div>
+                  </div>
+                  {/* Download Button */}
+                  <Button
+                    onClick={downloadQRCode}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    <Download size={18} className="mr-2" />
+                    Download QR Code
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+          {/* Scan Mode */}
+          {mode === 'scan' && (
+            <div className="text-center py-8 space-y-4">
+              <Smartphone size={48} className="mx-auto text-gray-400" />
+              <p className="text-gray-600">
+                Scanning feature coming soon!
+              </p>
+              <p className="text-sm text-gray-500">
+                Use your phone camera or a QR code scanner app to scan codes.
+              </p>
+            </div>
+          )}
+          {/* Close Button */}
+          {onClose && (
+            <Button
+              variant="outline"
+              onClick={onClose}
+              className="w-full"
+            >
+              Close
+            </Button>
           )}
         </CardContent>
       </Card>
     </div>
+  </DefaultLayout>
   );
 };
 
-export default QRCodeScanner;
+export default QRCodeGenerator;

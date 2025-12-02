@@ -20,9 +20,9 @@ export default function Chatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: "Hello! I'm your Yenepoya Institute of Technology assistant. How can I help you today?",
+      text: "Hello! I'm your Personal Food Assistant. How can I help you today?",
       sender: 'bot',
-      timestamp: new Date()
+      timestamp: new Date
     }
   ]);
   
@@ -40,13 +40,15 @@ export default function Chatbot() {
 
   const getAIResponse = async (query: string): Promise<string> => {
     try {
-      const genAI = new GoogleGenAI({ apiKey: "AIzaSyAAcIG-xEzQFfog8cfWeBQyWSmwIdrOYfI" });
+      const genAI = new GoogleGenAI({ apiKey: import.meta.env.VITE_GOOGLE_GENAI_API_KEY });
       
-      const prompt = `You are a friendly and knowledgeable student assistant chatbot for Yenepoya Institute of Technology (YIT), Thodar. 
-You help current and prospective students by answering questions about courses, admissions, campus life, facilities, departments, and other student-related information.
-Keep your responses clear, helpful, and student-friendly.
-Important: When providing links, just write them as plain URLs without any markdown formatting or backticks.
-User query: ${query}`;
+      const prompt = `You are a friendly and helpful food assistant chatbot for customers.
+        You help customers by answering questions about menu items, dietary preferences, nutritional information, food recommendations, and restaurant services.
+        Provide personalized suggestions based on their food preferences, dietary restrictions, and taste preferences.
+        Give helpful information about dining options, food ordering, delivery services, and hospitality services.
+        Keep your responses clear, friendly, and customer-focused.
+        Important: When providing links, just write them as plain URLs without any markdown formatting or backticks.
+        User query: ${query}`;
 
       const response = await genAI.models.generateContent({
         model: "gemini-2.0-flash-001",
@@ -60,7 +62,7 @@ User query: ${query}`;
         .replace(/`/g, '')    // Remove backticks
         .replace(/\n\*/g, '\n') // Remove asterisks at start of lines
         .trim();
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error getting AI response:', error);
       
       // Handle rate limiting with retry delay
@@ -127,7 +129,7 @@ User query: ${query}`;
                 href={word}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-500 hover:text-blue-600 underline"
+                className="text-primary hover:text-primary/80 underline"
               >
                 {word}{' '}
               </a>
@@ -140,7 +142,7 @@ User query: ${query}`;
               <Link
                 key={index}
                 to={word}
-                className="text-blue-500 hover:text-blue-600 underline"
+                className="text-primary hover:text-primary/80 underline"
               >
                 {word}{' '}
               </Link>
@@ -184,7 +186,7 @@ User query: ${query}`;
                       <div 
                         className={`rounded-lg px-4 py-2 max-w-[80%] ${
                           message.sender === 'user' 
-                            ? 'bg-yendine-navy text-white' 
+                            ? 'bg-primary text-primary-foreground' 
                             : 'bg-muted'
                         }`}
                       >
@@ -230,7 +232,7 @@ User query: ${query}`;
                   />
                   <Button 
                     type="submit" 
-                    className="bg-yendine-teal hover:bg-yendine-teal/90 text-white"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
                     disabled={!input.trim() || isTyping}
                   >
                     <Send className="h-4 w-4" />

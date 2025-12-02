@@ -77,7 +77,7 @@ export default function SeatManagement({
   // ENHANCED: Get seat status color with better visual distinction
   const getSeatStatusColor = (seat: SeatStatus) => {
     if (selectedSeats.includes(seat.seatNumber)) {
-      return 'bg-yendine-teal text-white border-yendine-teal';
+      return 'bg-primary text-primary-foreground border-primary';
     }
     
     if (isSeatBlocked(seat)) {
@@ -88,11 +88,11 @@ export default function SeatManagement({
       } else if (timeRemaining <= 15) {
         return 'bg-yellow-500 text-black border-yellow-500'; // Medium time
       } else {
-        return 'bg-red-500 text-white border-red-500'; // Long time remaining
+        return 'bg-destructive text-destructive-foreground border-destructive'; // Long time remaining
       }
     }
     
-    return 'bg-green-500 text-white border-green-500 hover:bg-green-600';
+    return 'bg-primary text-primary-foreground border-primary hover:bg-primary/90';
   };
 
   // ENHANCED: Get seat status text with more detail
@@ -157,7 +157,7 @@ export default function SeatManagement({
                 w-12 h-12 rounded-lg border-2 font-medium text-sm transition-all relative
                 ${getSeatStatusColor(seat)}
                 ${disabled || isBlocked ? 'cursor-not-allowed opacity-80' : 'cursor-pointer hover:scale-105'}
-                ${selectedSeats.includes(seatNumber) ? 'ring-2 ring-offset-2 ring-yendine-teal' : ''}
+                ${selectedSeats.includes(seatNumber) ? 'ring-2 ring-offset-2 ring-primary' : ''}
                 ${isBlocked ? 'shadow-inner' : ''}
               `}
               title={getSeatTooltip(seat)}
@@ -223,15 +223,15 @@ export default function SeatManagement({
         </div>
         <div className="flex gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-green-500 rounded"></div>
+            <div className="w-3 h-3 bg-primary rounded"></div>
             <span>Available ({availableSeats})</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-red-500 rounded"></div>
+            <div className="w-3 h-3 bg-destructive rounded"></div>
             <span>Blocked ({blockedSeats})</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-yendine-teal rounded"></div>
+            <div className="w-3 h-3 bg-primary rounded"></div>
             <span>Selected ({selectedSeats.length})</span>
           </div>
         </div>
@@ -243,9 +243,9 @@ export default function SeatManagement({
         <div className="space-y-4">
           {/* NEW: Blocked Seats Warning */}
           {blockedSeats > 0 && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-              <h4 className="font-medium text-red-800 mb-2">⚠️ Blocked Seats</h4>
-              <p className="text-sm text-red-700">
+            <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+              <h4 className="font-medium text-destructive mb-2">⚠️ Blocked Seats</h4>
+              <p className="text-sm text-destructive/80">
                 {blockedSeats} seats are currently blocked and cannot be selected. 
                 They will become available after their 30-minute booking period expires.
               </p>
@@ -261,14 +261,14 @@ export default function SeatManagement({
 
           {/* Selected Seats Summary */}
           {selectedSeats.length > 0 && (
-            <div className="mt-4 p-3 bg-yendine-teal/10 border border-yendine-teal/20 rounded-lg">
-              <h4 className="font-medium text-yendine-teal mb-2">Selected Seats:</h4>
+            <div className="mt-4 p-3 bg-primary/10 border border-primary/20 rounded-lg">
+              <h4 className="font-medium text-primary mb-2">Selected Seats:</h4>
               <div className="flex flex-wrap gap-2">
                 {selectedSeats.map(seatNumber => (
                   <Badge
                     key={seatNumber}
                     variant="secondary"
-                    className="bg-yendine-teal text-white"
+                    className="bg-primary text-primary-foreground"
                   >
                     Seat {seatNumber}
                   </Badge>
@@ -296,12 +296,12 @@ export default function SeatManagement({
                         className={`p-2 border rounded text-sm ${
                           isExpiringSoon 
                             ? 'bg-orange-50 border-orange-200' 
-                            : 'bg-red-50 border-red-200'
+                            : 'bg-destructive/10 border-destructive/20'
                         }`}
                       >
                         <div className="font-medium">Seat {seat.seatNumber}</div>
                         <div className={`font-bold ${
-                          isExpiringSoon ? 'text-orange-600' : 'text-red-600'
+                          isExpiringSoon ? 'text-destructive' : 'text-destructive/50'
                         }`}>
                           {timeRemaining}m remaining
                         </div>

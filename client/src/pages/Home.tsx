@@ -7,19 +7,13 @@ import { Link } from "react-router-dom";
 const featureCards = [
   {
     title: "Food Ordering",
-    description: "Order your favorite food from campus vendors with just a few clicks.",
+    description: "Order your favorite food from us with just a few clicks.",
     link: "/food",
     linkText: "Order Food"
   },
   {
-    title: "Community Updates",
-    description: "Stay updated with the latest events and announcements from campus.",
-    link: "/community",
-    linkText: "View Community"
-  },
-  {
-    title: "Campus Chatbot",
-    description: "Instant answers to your questions about college life, academics, and beyond.",
+    title: "Chatbot Assistant",
+    description: "Instant answers to your questions about restaurant orders and delivery.",
     link: "/chatbot",
     linkText: "Ask Questions"
   }
@@ -29,43 +23,43 @@ export default function Home() {
   return (
     <DefaultLayout>
       {/* Hero Section */}
-      <section className=" text-white py-16 md:py-24">
+      <section className=" text-white py-16 md:py-24 w-full">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl text-black">
-                Welcome to Yen-Dine
+                Welcome to Quick Tap
               </h1>
-              <p className="mx-auto max-w-[700px] text-black-200 md:text-xl text-black">
-                Your one-stop platform for campus dining, community updates, and more.
+              <p className="mx-auto max-w-[700px] text-gray-600 md:text-xl font-semibold">
+                Your one-stop platform for dining, community updates, and more.
               </p>
             </div>
             <div className="space-x-4">
-              <Button asChild className="bg-yendine-teal hover:bg-yendine-teal/90 text-white">
+              <Button asChild className="bg-yendine-navy hover:bg-yendine-navy/90 text-white">
                 <Link to="/food">Order Food</Link>
               </Button>
-              <Button asChild variant="outline" className="bg-yendine-teal hover:bg-yendine-teal/90 text-white">
+              {/* <Button asChild variant="outline" className="bg-yendine-teal hover:bg-yendine-teal/90 text-white">
                 <Link to="/community">Explore Community</Link>
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-12 md:py-16">
-        <div className="container px-4 md:px-6">
+      <section className="py-12 md:py-16 w-full  ">
+        <div className="container px-4 md:px-6 flex flex-col justify-center items-center">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
               <h2 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
-                Everything You Need on Campus
+                Everything You Need in One Place
               </h2>
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-lg">
-                Yen-Dine integrates essential campus services into one convenient platform.
+                Quick Tap integrates essential features to enhance Our customer experience.
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 ">
             {featureCards.map((feature, index) => (
               <Card key={index} className="border border-border hover:shadow-md transition-shadow">
                 <CardHeader>
@@ -82,8 +76,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
- 
     </DefaultLayout>
   );
 }

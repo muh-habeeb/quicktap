@@ -207,18 +207,18 @@ export default function SeatAdminDashboard() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-500';
-      case 'expired': return 'bg-red-500';
-      case 'completed': return 'bg-blue-500';
-      default: return 'bg-gray-500';
+      case 'active': return 'bg-primary text-primary-foreground';
+      case 'expired': return 'bg-destructive text-destructive-foreground';
+      case 'completed': return 'bg-accent text-accent-foreground';
+      default: return 'bg-gray-500 text-white';
     }
   };
 
   const getPaymentStatusColor = (paymentStatus: string) => {
     switch (paymentStatus) {
-      case 'completed': return 'bg-green-500';
+      case 'completed': return 'bg-primary text-primary-foreground';
       case 'pending': return 'bg-yellow-500';
-      case 'failed': return 'bg-red-500';
+      case 'failed': return 'bg-destructive text-destructive-foreground';
       case 'refunded': return 'bg-gray-500';
       default: return 'bg-gray-500';
     }
@@ -261,16 +261,16 @@ export default function SeatAdminDashboard() {
   return (
     <div className="space-y-6">
       {/* Payment Verification Summary */}
-      <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
+      <Card className="bg-gradient-to-r from-primary/20 to-accent/20 border-primary/30">
         <CardHeader>
-          <CardTitle className="text-lg text-green-800">Payment Verification Overview</CardTitle>
+          <CardTitle className="text-lg text-primary">Payment Verification Overview</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{stats?.paymentVerified || 0}</div>
-              <div className="text-sm text-green-700">Payment Verified</div>
-              <div className="text-xs text-green-600">Seats confirmed after payment</div>
+              <div className="text-2xl font-bold text-primary">{stats?.paymentVerified || 0}</div>
+              <div className="text-sm text-primary/80">Payment Verified</div>
+              <div className="text-xs text-primary/60">Seats confirmed after payment</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-yellow-600">{stats?.pendingPayment || 0}</div>
@@ -278,9 +278,9 @@ export default function SeatAdminDashboard() {
               <div className="text-xs text-yellow-600">Awaiting payment confirmation</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{stats?.temporaryReservations || 0}</div>
-              <div className="text-sm text-blue-700">Temporary Reservations</div>
-              <div className="text-xs text-blue-600">5-minute holds during payment</div>
+              <div className="text-2xl font-bold text-accent">{stats?.temporaryReservations || 0}</div>
+              <div className="text-sm text-accent/80">Temporary Reservations</div>
+              <div className="text-xs text-accent/60">5-minute holds during payment</div>
             </div>
           </div>
         </CardContent>
@@ -302,7 +302,7 @@ export default function SeatAdminDashboard() {
             <CardTitle className="text-sm font-medium">Active</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats?.active || 0}</div>
+            <div className="text-2xl font-bold text-primary">{stats?.active || 0}</div>
           </CardContent>
         </Card>
         
@@ -311,7 +311,7 @@ export default function SeatAdminDashboard() {
             <CardTitle className="text-sm font-medium">Expired</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">{stats?.expired || 0}</div>
+            <div className="text-2xl font-bold text-destructive">{stats?.expired || 0}</div>
           </CardContent>
         </Card>
         
@@ -320,7 +320,7 @@ export default function SeatAdminDashboard() {
             <CardTitle className="text-sm font-medium">Completed</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{stats?.completed || 0}</div>
+            <div className="text-2xl font-bold text-accent">{stats?.completed || 0}</div>
           </CardContent>
         </Card>
         
@@ -425,7 +425,7 @@ export default function SeatAdminDashboard() {
                               <Badge variant="outline" className="text-xs">TEMP</Badge>
                             )}
                             {booking.paymentVerified && (
-                              <Badge variant="default" className="text-xs bg-green-600">PAID</Badge>
+                              <Badge variant="default" className="text-xs bg-primary">PAID</Badge>
                             )}
                           </div>
                         </td>
@@ -465,7 +465,7 @@ export default function SeatAdminDashboard() {
                               {booking.paymentStatus || 'pending'}
                             </Badge>
                             {booking.paymentVerified && (
-                              <Badge variant="outline" className="text-xs text-green-600">
+                              <Badge variant="outline" className="text-xs text-primary">
                                 ✓ Verified
                               </Badge>
                             )}
