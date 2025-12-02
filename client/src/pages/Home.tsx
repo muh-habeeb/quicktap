@@ -21,11 +21,20 @@ const featureCards = [
   }
 ];
 
+const heroImg1 = "/home/cake.png";
+const heroImg2 = "/home/pan.png";
+
 export default function Home() {
   return (
-    <DefaultLayout>
+    <DefaultLayout >
+      <div className=" hidden md:block w-full h-full absolute overflow-x-hidden top-0 left-0 -z-1">
+
+        <div className=" heroImage absolute -left-44"><img src={heroImg1} alt="" /></div>
+        <div className=" heroImage absolute rotate-45  -right-36  overflow-hidden"><img src={heroImg2} alt="" /></div>
+      </div>
+
       {/* Hero Section */}
-      <section className=" text-white py-16 md:py-12 w-full"  >
+      <section className=" text-white py-16 md:py-12 w-full relative"  >
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2 mt-0">

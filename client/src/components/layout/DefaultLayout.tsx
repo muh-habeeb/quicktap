@@ -15,7 +15,7 @@ interface DefaultLayoutProps {
 
 export function DefaultLayout({ children }: DefaultLayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col capitalize bg-[#01422c] ">
+    <div className="flex min-h-screen flex-col capitalize bg-[#01422c]  ">
       <SiteHeader />
       <main className="flex-1 ">{children}</main>
       <SiteFooter />
