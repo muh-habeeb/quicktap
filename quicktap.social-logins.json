@@ -1,10 +1,152 @@
-[{
-  "_id": {
-    "$oid": "692e01f227044e60795d192d"
+[
+  {
+    "_id": { "$oid": "692f41cd3e0cee10b08f4037" },
+    "name": "cheken",
+    "description": "Brosted Chicken",
+    "price": { "$numberInt": "300" },
+    "category": "meals",
+    "image": "https://res.cloudinary.com/djx03hb2n/image/upload/v1764704716/quick-tap/my0edcopf6joe1l4i5r7.jpg",
+    "imageData": {
+      "url": "https://res.cloudinary.com/djx03hb2n/image/upload/v1764704716/quick-tap/my0edcopf6joe1l4i5r7.jpg",
+      "public_id": "quick-tap/my0edcopf6joe1l4i5r7",
+      "_id": { "$oid": "692f41cd3e0cee10b08f4038" }
+    },
+    "isAvailable": true,
+    "preparationTime": { "$numberInt": "15" },
+    "ingredients": [],
+    "nutritionalInfo": {
+      "calories": { "$numberInt": "0" },
+      "protein": { "$numberInt": "0" },
+      "carbs": { "$numberInt": "0" },
+      "fat": { "$numberInt": "0" }
+    },
+    "createdAt": { "$date": { "$numberLong": "1764704717312" } },
+    "updatedAt": { "$date": { "$numberLong": "1764704717317" } },
+    "__v": { "$numberInt": "0" }
   },
-  "name": "ROCK PAPER",
-  "email": "rockpaper1222@gmail.com",
-  "image": "https://lh3.googleusercontent.com/a/ACg8ocJ1oeJAz4diROBeBWnFZqcVYdEL1alZ_CwwzLvKayVoi-YnRNE=s96-c",
-  "isAdmin": true,
-  "__v": 0
-}]
+  {
+    "_id": { "$oid": "692f41b03e0cee10b08f4033" },
+    "name": "strawberry shake",
+    "description": "strawberry shake🍓🍓🍓",
+    "price": { "$numberInt": "150" },
+    "category": "cooldrink",
+    "image": "https://res.cloudinary.com/djx03hb2n/image/upload/v1764704687/quick-tap/hxslcmugk6gdw4jgipfb.jpg",
+    "imageData": {
+      "url": "https://res.cloudinary.com/djx03hb2n/image/upload/v1764704687/quick-tap/hxslcmugk6gdw4jgipfb.jpg",
+      "public_id": "quick-tap/hxslcmugk6gdw4jgipfb",
+      "_id": { "$oid": "692f41b03e0cee10b08f4034" }
+    },
+    "isAvailable": true,
+    "preparationTime": { "$numberInt": "5" },
+    "ingredients": [],
+    "nutritionalInfo": {
+      "calories": { "$numberInt": "0" },
+      "protein": { "$numberInt": "0" },
+      "carbs": { "$numberInt": "0" },
+      "fat": { "$numberInt": "0" }
+    },
+    "createdAt": { "$date": { "$numberLong": "1764704688005" } },
+    "updatedAt": { "$date": { "$numberLong": "1764704688008" } },
+    "__v": { "$numberInt": "0" }
+  },
+  {
+    "_id": { "$oid": "692f417f3e0cee10b08f402f" },
+    "name": "mango shake",
+    "description": "mango shake yello",
+    "price": { "$numberInt": "110" },
+    "category": "cooldrink",
+    "image": "https://res.cloudinary.com/djx03hb2n/image/upload/v1764704638/quick-tap/xdvtvnfuwyc2ycjls3xp.jpg",
+    "imageData": {
+      "url": "https://res.cloudinary.com/djx03hb2n/image/upload/v1764704638/quick-tap/xdvtvnfuwyc2ycjls3xp.jpg",
+      "public_id": "quick-tap/xdvtvnfuwyc2ycjls3xp",
+      "_id": { "$oid": "692f417f3e0cee10b08f4030" }
+    },
+    "isAvailable": true,
+    "preparationTime": { "$numberInt": "15" },
+    "ingredients": [],
+    "nutritionalInfo": {
+      "calories": { "$numberInt": "0" },
+      "protein": { "$numberInt": "0" },
+      "carbs": { "$numberInt": "0" },
+      "fat": { "$numberInt": "0" }
+    },
+    "createdAt": { "$date": { "$numberLong": "1764704639241" } },
+    "updatedAt": { "$date": { "$numberLong": "1764704639244" } },
+    "__v": { "$numberInt": "0" }
+  },
+  {
+    "_id": { "$oid": "692f415f3e0cee10b08f4027" },
+    "name": "shawarma",
+    "description": "shawarma",
+    "price": { "$numberInt": "110" },
+    "category": "meals",
+    "image": "https://res.cloudinary.com/djx03hb2n/image/upload/v1764704605/quick-tap/djghpubgmcm3qffvpe5z.jpg",
+    "imageData": {
+      "url": "https://res.cloudinary.com/djx03hb2n/image/upload/v1764704605/quick-tap/djghpubgmcm3qffvpe5z.jpg",
+      "public_id": "quick-tap/djghpubgmcm3qffvpe5z",
+      "_id": { "$oid": "692f415f3e0cee10b08f4028" }
+    },
+    "isAvailable": true,
+    "preparationTime": { "$numberInt": "10" },
+    "ingredients": [],
+    "nutritionalInfo": {
+      "calories": { "$numberInt": "0" },
+      "protein": { "$numberInt": "0" },
+      "carbs": { "$numberInt": "0" },
+      "fat": { "$numberInt": "0" }
+    },
+    "createdAt": { "$date": { "$numberLong": "1764704607388" } },
+    "updatedAt": { "$date": { "$numberLong": "1764704607392" } },
+    "__v": { "$numberInt": "0" }
+  },
+  {
+    "_id": { "$oid": "692f413d3e0cee10b08f4023" },
+    "name": "sandwitch",
+    "description": "saandwithc ood",
+    "price": { "$numberInt": "90" },
+    "category": "appetizer",
+    "image": "https://res.cloudinary.com/djx03hb2n/image/upload/v1764704572/quick-tap/vjg35xsz6qnqsapji3di.jpg",
+    "imageData": {
+      "url": "https://res.cloudinary.com/djx03hb2n/image/upload/v1764704572/quick-tap/vjg35xsz6qnqsapji3di.jpg",
+      "public_id": "quick-tap/vjg35xsz6qnqsapji3di",
+      "_id": { "$oid": "692f413d3e0cee10b08f4024" }
+    },
+    "isAvailable": true,
+    "preparationTime": { "$numberInt": "5" },
+    "ingredients": [],
+    "nutritionalInfo": {
+      "calories": { "$numberInt": "0" },
+      "protein": { "$numberInt": "0" },
+      "carbs": { "$numberInt": "0" },
+      "fat": { "$numberInt": "0" }
+    },
+    "createdAt": { "$date": { "$numberLong": "1764704573399" } },
+    "updatedAt": { "$date": { "$numberLong": "1764704573402" } },
+    "__v": { "$numberInt": "0" }
+  },
+  {
+    "_id": { "$oid": "692f40e43e0cee10b08f401b" },
+    "name": "Dhosha",
+    "description": "delicious dhosha",
+    "price": { "$numberInt": "20" },
+    "category": "appetizer",
+    "image": "https://res.cloudinary.com/djx03hb2n/image/upload/v1764704483/quick-tap/gj7pxxcmybdqzimknfqr.jpg",
+    "imageData": {
+      "url": "https://res.cloudinary.com/djx03hb2n/image/upload/v1764704483/quick-tap/gj7pxxcmybdqzimknfqr.jpg",
+      "public_id": "quick-tap/gj7pxxcmybdqzimknfqr",
+      "_id": { "$oid": "692f40e43e0cee10b08f401c" }
+    },
+    "isAvailable": true,
+    "preparationTime": { "$numberInt": "5" },
+    "ingredients": [],
+    "nutritionalInfo": {
+      "calories": { "$numberInt": "0" },
+      "protein": { "$numberInt": "0" },
+      "carbs": { "$numberInt": "0" },
+      "fat": { "$numberInt": "0" }
+    },
+    "createdAt": { "$date": { "$numberLong": "1764704484250" } },
+    "updatedAt": { "$date": { "$numberLong": "1764704484269" } },
+    "__v": { "$numberInt": "0" }
+  }
+]

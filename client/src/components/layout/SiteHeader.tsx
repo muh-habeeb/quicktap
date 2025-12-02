@@ -133,13 +133,13 @@ export function SiteHeader() {
             >
               Food
             </Link>
-            <Link
+            {/* <Link
               to="/community"
               className="text-base font-medium transition-colors hover:text-quicktap-creamy/40"
               onClick={() => setIsMenuOpen(false)}
             >
               Community
-            </Link>
+            </Link> */}
             {isAdmin && (
               <Link
                 to="/scan-qr"
