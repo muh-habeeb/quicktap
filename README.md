@@ -462,56 +462,110 @@ npm install
 
 #### Server Configuration (`server/.env`)
 
+| Variable | Type | Required | Description | Example |
+|----------|------|----------|-------------|---------|
+| **PORT** | Number | ✅ | Server port | `5000` |
+| **NODE_ENV** | String | ✅ | Environment (development/production) | `development` |
+| **SERVER_URL** | String | ✅ | Server URL for callbacks | `http://localhost:5000` |
+| **DB_URL** | String | ✅ | MongoDB connection string | `mongodb://localhost:27017/quicktap` |
+| **JWT_SECRET** | String | ✅ | Secret key for JWT tokens (change in production!) | `your-super-secret-key-here` |
+| **JWT_TIMEOUT** | String | ✅ | JWT expiration time | `3d` |
+| **GOOGLE_CLIENT_ID** | String | ✅ | Google OAuth Client ID | `xxx-xxx.apps.googleusercontent.com` |
+| **GOOGLE_CLIENT_SECRET** | String | ✅ | Google OAuth Client Secret | `GOCSPX-xxxxx` |
+| **RAZORPAY_KEY_ID** | String | ✅ | Razorpay API Key ID | `rzp_test_xxxxx` |
+| **RAZORPAY_KEY_SECRET** | String | ✅ | Razorpay API Secret | `xxxxx` |
+| **CLOUDINARY_CLOUD_NAME** | String | ✅ | Cloudinary cloud name | `your-cloud-name` |
+| **CLOUDINARY_API_KEY** | String | ✅ | Cloudinary API Key | `xxxxx` |
+| **CLOUDINARY_API_SECRET** | String | ✅ | Cloudinary API Secret | `xxxxx` |
+| **VITE_GOOGLE_CLIENT_ID** | String | ✅ | Google Client ID (also used client-side) | `xxx-xxx.apps.googleusercontent.com` |
+| **VITE_GOOGLE_GENAI_API_KEY** | String | ✅ | Google Gemini AI API Key | `AIzaSyxxxxx` |
+| **VITE_RAZORPAY_KEY_ID** | String | ✅ | Razorpay key (also used client-side) | `rzp_test_xxxxx` |
+| **GOOGLE_MAPS_REVIEW_URL** | String | ✅ | Google Maps review link | `https://share.google/cbBjzGYI789EORiyA` |
+| **CLIENT_URL** | String | ⚠️ | Client URL (for CORS) | `http://localhost:5173` |
+
+**Complete Server `.env` Template:**
 ```env
-# Server Configuration
+# ============ SERVER CONFIGURATION ============
 PORT=5000
 NODE_ENV=development
+SERVER_URL=http://localhost:5000
 
-# Database
+# ============ DATABASE CONFIGURATION ============
+# Local MongoDB
 DB_URL=mongodb://localhost:27017/quicktap
-# Or MongoDB Atlas:
-# DB_URL=mongodb+srv://username:password@cluster.mongodb.net/quicktap
 
-# Authentication
+# OR MongoDB Atlas (Cloud)
+# DB_URL=mongodb+srv://username:password@cluster.mongodb.net/quicktap?retryWrites=true&w=majority
+
+# ============ JWT AUTHENTICATION ============
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 JWT_TIMEOUT=3d
 
-# Google OAuth 2.0
-GOOGLE_CLIENT_ID=your-google-client-id-here.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=your-google-client-secret-here
+# ============ GOOGLE OAUTH 2.0 ============
+# Get these from: https://console.cloud.google.com/
+GOOGLE_CLIENT_ID=858522882521-kaolgrmvqpp6q7vvh4njf5qe0g1p6qbe.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
 
-# Razorpay Payment Gateway
-RAZORPAY_KEY_ID=rzp_test_your_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_secret
+# ============ RAZORPAY PAYMENT GATEWAY ============
+# Get these from: https://dashboard.razorpay.com/app/keys
+RAZORPAY_KEY_ID=rzp_test_RmpLL8qhP2sglB
+RAZORPAY_KEY_SECRET=BaYOq3hEzfDn8PORH53N5PcZ
 
-# Cloudinary Image Upload
-CLOUDINARY_CLOUD_NAME=your-cloud-name
-CLOUDINARY_API_KEY=your-api-key
-CLOUDINARY_API_SECRET=your-api-secret
+# ============ CLOUDINARY IMAGE UPLOAD ============
+# Get these from: https://cloudinary.com/console/settings/api
+CLOUDINARY_CLOUD_NAME=dta9j3y0h
+CLOUDINARY_API_KEY=234732729581863
+CLOUDINARY_API_SECRET=kihv8FXOSsiV1JlZs9lcCu7njEE
 
-# Client URL (for CORS)
-CLIENT_URL=http://localhost:5173
+# ============ GOOGLE GEMINI AI (Chatbot) ============
+# Get this from: https://makersuite.google.com/app/apikey
+VITE_GOOGLE_GENAI_API_KEY=AIzaSyCHmgISdV-xtgiuD7iWf_qHn7cShgYlxnE
 
-# Google Maps Review URL
-GOOGLE_MAPS_REVIEW_URL=https://share.google/your-review-link
+# ============ CLIENT-SIDE VARIABLES ============
+# Used in client build
+VITE_GOOGLE_CLIENT_ID=34565640354-hpqh2922cgrnun7vmubq52udnip5jt11.apps.googleusercontent.com
+VITE_RAZORPAY_KEY_ID=rzp_test_RmpLL8qhP2sglB
+VITE_RAZORPAY_KEY_SECRET=BaYOq3hEzfDn8PORH53N5PcZ
+
+# ============ GOOGLE MAPS REVIEW URL ============
+# Get from: https://maps.google.com/ → Share link
+GOOGLE_MAPS_REVIEW_URL=https://share.google/cbBjzGYI789EORiyA
+
+# ============ CORS CONFIGURATION (Optional) ============
+# CORS_ORIGIN=http://localhost:5173,http://localhost:3000
+# CORS_CREDENTIALS=true
 ```
 
 #### Client Configuration (`client/.env`)
 
+| Variable | Type | Required | Description | Example |
+|----------|------|----------|-------------|---------|
+| **VITE_GOOGLE_CLIENT_ID** | String | ✅ | Google OAuth Client ID | `xxx-xxx.apps.googleusercontent.com` |
+| **VITE_RAZORPAY_KEY_ID** | String | ✅ | Razorpay Key ID (public) | `rzp_test_xxxxx` |
+| **VITE_GOOGLE_GENAI_API_KEY** | String | ✅ | Google Gemini AI API Key | `AIzaSyxxxxx` |
+| **VITE_GOOGLE_MAPS_REVIEW_URL** | String | ✅ | Google Maps review link | `https://share.google/xxxxx` |
+
+**Complete Client `.env` Template:**
 ```env
-# Google OAuth 2.0
-VITE_GOOGLE_CLIENT_ID=your-google-client-id-here.apps.googleusercontent.com
+# ============ AUTHENTICATION ============
+# Get from: https://console.cloud.google.com/
+VITE_GOOGLE_CLIENT_ID=34565640354-hpqh2922cgrnun7vmubq52udnip5jt11.apps.googleusercontent.com
 
-# Razorpay
-VITE_RAZORPAY_KEY_ID=rzp_test_your_key_id
+# ============ PAYMENT GATEWAY ============
+# Get from: https://dashboard.razorpay.com/app/keys
+VITE_RAZORPAY_KEY_ID=rzp_test_RmpLL8qhP2sglB
 
-# Google Gemini AI
-VITE_GOOGLE_GENAI_API_KEY=your-gemini-api-key
+# ============ AI ASSISTANT ============
+# Get from: https://makersuite.google.com/app/apikey
+VITE_GOOGLE_GENAI_API_KEY=AIzaSyCHmgISdV-xtgiuD7iWf_qHn7cShgYlxnE
 
-# Google Maps Review
-VITE_GOOGLE_MAPS_REVIEW_URL=https://share.google/your-review-link
+# ============ GOOGLE MAPS REVIEWS ============
+VITE_GOOGLE_MAPS_REVIEW_URL=https://share.google/cbBjzGYI789EORiyA
 
-# Note: API URL is auto-detected - no need to configure!
+# NOTE: API URL is AUTO-DETECTED! No need to configure.
+# Development: http://localhost:5000
+# Network: http://<your-ip>:5000
+# Production: https://<your-domain>
 ```
 
 ### 2. Setup Database
