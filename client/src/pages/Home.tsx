@@ -93,7 +93,7 @@ export default function Home() {
                 <Link to="/food">Order Now</Link>
               </Button> 
               <Button asChild className="bg-transparent hover:bg-quicktap-creamy backdrop-blur text-quicktap-creamy hover:text-quicktap-teal border h-[50px] w-full md:w-[180px] text-lg md:text-xl font-semibold">
-                <Link to="/food">Brows Menu</Link>
+                <Link to="/food">Browse Menu</Link>
               </Button>
             </div>
           </div>
