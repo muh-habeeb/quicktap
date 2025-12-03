@@ -4,6 +4,7 @@ export const config = {
   getApiUrl: () => {
     const hostname = window.location.hostname;
     const protocol = window.location.protocol; // Get current protocol (http: or https:)
+    const port = window.location.port;
     
     // Development environment
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
@@ -20,8 +21,31 @@ export const config = {
       return `https://${hostname}`;
     }
     
-    // Fallback for other network IPs with HTTP
-    return `http://${hostname}:5000`;
+    // Staging/development HTTP with port
+    if (port && port !== '80' && port !== '443') {
+      return `http://${hostname}:5000`;
+    }
+    
+    // Fallback
+    return `${protocol}//${hostname}:5000`;
+  },
+
+  // Get origin URL for OAuth redirect URIs
+  getOriginUrl: () => {
+    const protocol = window.location.protocol;
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    
+    // Don't include port for standard ports (80 for http, 443 for https)
+    if ((protocol === 'https:' && port === '443') || (protocol === 'http:' && port === '80')) {
+      return `${protocol}//${hostname}`;
+    }
+    
+    if (port) {
+      return `${protocol}//${hostname}:${port}`;
+    }
+    
+    return `${protocol}//${hostname}`;
   },
   
   // Google OAuth configuration

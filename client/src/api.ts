@@ -33,7 +33,9 @@ console.log('API Configuration:', {
     baseURL: API_URL,
     currentHost: window.location.hostname,
     currentPort: window.location.port,
-    fullUrl: window.location.href
+    protocol: window.location.protocol,
+    fullUrl: window.location.href,
+    googleClientId: import.meta.env.VITE_GOOGLE_CLIENT_ID ? import.meta.env.VITE_GOOGLE_CLIENT_ID.substring(0, 20) + '...' : 'NOT SET'
 });
 
 // Helper function to compress image
