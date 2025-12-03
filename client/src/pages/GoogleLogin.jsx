@@ -105,38 +105,64 @@ const GoogleLogin = (props) => {
     onError: responseGoogle,
     flow: "implicit",
   });
+  const bgImg1 = '/login/brosted-transparent.png'
+  const bgImg2 = '/login/burger.jpg'
 
+
+
+  const heroImg1 = "/home/cake.png";
+  const heroImg2 = "/home/pan.png";
 
   return (
     <DefaultLayout>
-      <div className="container py-12 flex items-center justify-center ">
-        <Card className="w-full max-w-md bg-white border border-quicktap-teal hover:shadow-lg flex flex-col items-center justify-center">
-          <CardHeader className="space-y-1">
-            <CardTitle className="font-bold text-center  ">Sign in</CardTitle>
-            <CardDescription className="text-sm text-quicktap-darkGray">
-              Sign in to Browse the awesome features of QuickTap
+
+      <div className="min-h-[calc(100vh-200px)] w-screen  flex items-center justify-center ">
+        <div className=" absolute size-20 top-60"><img src={bgImg1} alt="" /></div>
+      </div>
+
+
+      <div className="min-h-[calc(100vh-200px)] flex items-center justify-center px-4 py-12" style={{ zIndex: 1 }}>
+        <Card className="w-full max-w-md flex flex-col items-center justify-center bg-white/95 backdrop-blur  shadow-2xl border-quicktap-teal">
+          <CardHeader className="space-y-2 text-center">
+            <CardTitle className="text-3xl font-bold text-quicktap-creamy ">
+              Welcome Back
+            </CardTitle>
+            <CardDescription className="text-slate-200 text-base pt-4 ">
+              <div className="text-quicktap-lightGray">Sign in with your Google account to continue</div>
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+
+          <CardContent className="flex flex-col items-center justify-center space-y-6 pt-6">
             <Button
-              className="w-full flex items-center justify-center gap-2 bg-quicktap-teal text-gray-800 hover:bg-gray-100 border border-gray-300"
+              className="bg-white hover:bg-gray-50 text-gray-800 border-2 border-gray-300 hover:border-quicktap-teal 
+                         h-14 w-full max-w-xs font-semibold text-base shadow-md hover:shadow-lg 
+                         transition-all duration-200 flex items-center justify-center gap-3"
               onClick={googleLogin}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-mail">
-                <rect width="20" height="16" x="2" y="4" rx="2" />
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              <svg className="w-6 h-6" viewBox="-3 0 262 262" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
+                <path d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027" fill="#4285F4" />
+                <path d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1" fill="#34A853" />
+                <path d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782" fill="#FBBC05" />
+                <path d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251" fill="#EB4335" />
               </svg>
               Sign in with Google
             </Button>
 
             {error && (
-              <div className="text-red-500 text-sm text-center">
-                {error}
+              <div className="w-full max-w-xs p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-700 text-sm text-center font-medium">{error}</p>
               </div>
             )}
           </CardContent>
+
+          <CardFooter className="flex flex-col items-center space-y-4 pb-6">
+            <p className="text-sm text-gray-300 text-center">
+              By signing in, you agree to our Terms of Service
+            </p>
+          </CardFooter>
         </Card>
       </div>
+
     </DefaultLayout>
   );
 }

@@ -40,3 +40,10 @@
 .read-the-docs {
   color: #888;
 }
+
+@font-face {
+  font-family: "Heyam";
+  src: url("./assets/fonts/Heyam.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}

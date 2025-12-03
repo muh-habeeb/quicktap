@@ -62,15 +62,15 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ onClose }) => {
   return (<DefaultLayout>
 
     <div className="w-full max-w-2xl mx-auto mt-10">
-      <Card className="bg-yendine-green/5 border-yendine-orange/20">
-        <CardHeader className="bg-yendine-green rounded-t-lg">
+      <Card className="bg-quicktap-green/5 border-quicktap-orange/20">
+        <CardHeader className="bg-quicktap-green rounded-t-lg">
           <CardTitle className="flex items-center gap-2 text-yellow-100">
             <QrCode size={24} />
             Generate QR Code
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
-          <div className="bg-yendine-green/40 border-2 border-gray-400 rounded-lg p-4">
+          <div className="bg-quicktap-green/40 border-2 border-gray-400 rounded-lg p-4">
             <p className="text-sm text-gray-300 font-medium">
               <Info/> This QR code will redirect users to the order page after they login.
             </p>
@@ -85,7 +85,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ onClose }) => {
           {qrValue && (
             <div className="space-y-4">
               {/* QR Code Display */}
-              <div className="flex justify-center p-6 bg-yendine-green/40 rounded-lg border-2 border-gray-400">
+              <div className="flex justify-center p-6 bg-quicktap-green/40 rounded-lg border-2 border-gray-400">
                 <div ref={qrRef} className="bg-white p-4 rounded-lg">
                   <QRCodeLib.QRCodeSVG
                     value={qrValue}
@@ -105,7 +105,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ onClose }) => {
                     type="text"
                     value={generatedLink}
                     readOnly
-                    className="text-xs bg-yendine-green/40 border-2 border-gray-400 text-black"
+                    className="text-xs bg-quicktap-green/40 border-2 border-gray-400 text-black"
                   />
                   <Button
                     variant="outline"

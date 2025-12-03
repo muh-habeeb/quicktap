@@ -933,7 +933,7 @@ export default function Food() {
   // Handle UPI payment
   const handleUPIPayment = () => {
     const amount = getTotalPrice();
-    const upiUrl = `upi://pay?pa=yendine@upi&pn=Yendine%20Food&am=${amount}&cu=INR&tn=Food%20Order`;
+    const upiUrl = `upi://pay?pa=quicktap@upi&pn=quicktap%20Food&am=${amount}&cu=INR&tn=Food%20Order`;
 
     // Try to open UPI app, fallback to showing QR code
     window.open(upiUrl, '_blank');
@@ -943,7 +943,7 @@ export default function Food() {
   // Generate QR code for UPI payment
   const generateUPIQRCode = () => {
     const amount = getTotalPrice();
-    const upiString = `upi://pay?pa=yendine@upi&pn=Yendine%20Food&am=${amount}&cu=INR&tn=Food%20Order`;
+    const upiString = `upi://pay?pa=quicktap@upi&pn=quicktap%20Food&am=${amount}&cu=INR&tn=Food%20Order`;
     return upiString;
   };
 

@@ -64,20 +64,14 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// yendine: {
-				// 	navy: 'rgb(5,150,105)',
-				// 	teal: '#16C79A',
-				// 	orange: '#FF6B6B',
-				// 	lightGray: '#F8F9FA',
-				// 	darkGray: '#343A40'
-				// },
+				
 				quicktap: {
 					green: '#01422c',
 					teal: '#16C79A',
 					orange: '#FF6B6B',
 					lightGray: '#F8F9FA',
 					darkGray: '#343A40',
-					creamy:"#FFFDD0",
+					creamy: "#FFFDD0",
 				}
 			},
 			borderRadius: {
@@ -106,8 +100,9 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
-		}
+			},
+			
+		},
 	},
 	plugins: [tailwindcssAnimate],
 } satisfies Config;

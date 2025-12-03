@@ -183,7 +183,7 @@ export function SiteHeader() {
               <Button
                 variant="default"
                 size="sm"
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="w-full bg-quicktap-creamy hover:bg-quicktap-creamy/90 text-quicktap-green"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Link to="/" className="w-full">Login</Link>
