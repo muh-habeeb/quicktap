@@ -137,7 +137,7 @@ QuickTap addresses these challenges through:
 │ • Payment Processing (Razorpay)         │
 │ • Order Tracking                        │
 │ • AI Recommendations                    │
-│ • Chatbot Assistant                     │
+│ • AI Chatbot Assistant (OpenRouter)     │
 │ • Community Posts & Comments            │
 │ • Nutritional Information               │
 │ • Order History                         │

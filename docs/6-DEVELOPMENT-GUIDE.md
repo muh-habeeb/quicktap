@@ -102,8 +102,8 @@ CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_API_KEY=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
 
-# ============ GOOGLE GEMINI AI ============
-VITE_GOOGLE_GENAI_API_KEY=your-gemini-key
+# ============ OPENROUTER AI (CHATBOT) ============
+VITE_OPENROUTER_API_KEY=your-openrouter-key
 
 # ============ CLIENT-SIDE VARIABLES ============
 VITE_GOOGLE_CLIENT_ID=your-client-id
@@ -124,9 +124,16 @@ cp .env.example .env
 
 **File**: `client/.env`
 ```env
+# Google OAuth
 VITE_GOOGLE_CLIENT_ID=your-client-id
+
+# Razorpay Payment
 VITE_RAZORPAY_KEY_ID=rzp_test_key
-VITE_GOOGLE_GENAI_API_KEY=your-gemini-key
+
+# OpenRouter AI (Chatbot)
+VITE_OPENROUTER_API_KEY=your-openrouter-api-key
+
+# Google Maps Reviews
 VITE_GOOGLE_MAPS_REVIEW_URL=https://share.google/...
 
 # Note: API URL is auto-detected, no need to configure
@@ -171,11 +178,20 @@ VITE_GOOGLE_MAPS_REVIEW_URL=https://share.google/...
 4. Go to Settings → API Keys
 5. Copy API Key and API Secret
 
-### 6.3.4 Google Gemini API
+### 6.3.4 OpenRouter AI (Chatbot)
 
-1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Click "Create API Key"
-3. Copy the generated key
+1. Go to [OpenRouter](https://openrouter.ai)
+2. Sign up for a free account
+3. Navigate to **Settings** → **API Keys**
+4. Click **Create API Key**
+5. Copy the generated API key
+6. Add to `client/.env` as `VITE_OPENROUTER_API_KEY`
+
+**Features:**
+- Free tier available with request limits
+- Automatic model routing via `openrouter/auto`
+- Fallback handling for quota limits
+- Cost-effective alternative to direct Google/OpenAI APIs
 
 ---
 

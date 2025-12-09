@@ -614,7 +614,136 @@ Authorization: Bearer <jwt_token>
 
 ---
 
-## 4.9 Error Responses
+## 4.8 Chatbot (AI Assistant)
+
+### Overview
+The chatbot is powered by **OpenRouter AI** and runs entirely on the client-side. It provides intelligent responses about food items, dietary preferences, recommendations, and restaurant services.
+
+### Implementation Details
+- **Location**: `client/src/pages/Chatbot.tsx`
+- **API Provider**: OpenRouter (https://openrouter.ai)
+- **Model**: `openrouter/auto` (intelligent model routing)
+- **Authentication**: Bearer token via `VITE_OPENROUTER_API_KEY`
+- **Type**: Client-side REST API call (no backend involved)
+
+### Chatbot Request Format
+
+**Endpoint**: `https://openrouter.ai/api/v1/chat/completions`
+
+**Request Headers**
+```http
+Content-Type: application/json
+Authorization: Bearer sk-or-v1-YOUR_API_KEY
+HTTP-Referer: https://your-domain.com
+X-Title: QuickTap Chatbot
+```
+
+**Request Body**
+```json
+{
+  "model": "openrouter/auto",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are a friendly and helpful food assistant chatbot..."
+    },
+    {
+      "role": "user",
+      "content": "Tell me about dietary options"
+    }
+  ],
+  "temperature": 0.7,
+  "max_tokens": 500
+}
+```
+
+### Chatbot Response Format
+
+**Response** (200 OK)
+```json
+{
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": "We have excellent dietary options including vegan, gluten-free, and keto-friendly meals..."
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "model": "gpt-3.5-turbo",
+  "usage": {
+    "prompt_tokens": 150,
+    "completion_tokens": 200,
+    "total_tokens": 350
+  }
+}
+```
+
+### Error Handling
+
+**429 Rate Limit**
+```json
+{
+  "error": {
+    "message": "You have exceeded your rate limit",
+    "code": 429,
+    "status": "RATE_LIMIT_EXCEEDED"
+  }
+}
+```
+
+**401 Unauthorized**
+```json
+{
+  "error": {
+    "message": "Invalid API key",
+    "code": 401,
+    "status": "UNAUTHORIZED"
+  }
+}
+```
+
+### Chatbot Features
+- ✅ Menu-related queries
+- ✅ Dietary preferences (vegan, gluten-free, keto, etc.)
+- ✅ Nutritional information
+- ✅ Food recommendations
+- ✅ Restaurant services information
+- ✅ Smart fallback responses on quota exhaustion
+
+### Getting OpenRouter API Key
+1. Visit [openrouter.ai](https://openrouter.ai)
+2. Create a free account
+3. Navigate to **Settings → API Keys**
+4. Generate a new API key
+5. Add to `client/.env`: `VITE_OPENROUTER_API_KEY=sk-or-v1-...`
+
+### Usage in Frontend
+```typescript
+const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${apiKey}`,
+    'HTTP-Referer': window.location.origin,
+    'X-Title': 'QuickTap Chatbot',
+  },
+  body: JSON.stringify({
+    model: 'openrouter/auto',
+    messages: [...],
+    temperature: 0.7,
+    max_tokens: 500,
+  }),
+});
+
+const data = await response.json();
+const aiResponse = data.choices[0].message.content;
+```
+
+---
+
+## 4.9 User Profile
 
 ### Standard Error Format
 ```json

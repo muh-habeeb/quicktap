@@ -86,8 +86,8 @@
     │ MongoDB Atlas  │ │Cloudinary│ │ Google OAuth │
     │   (Cloud DB)   │ │ (Images) │ │ (Auth) +     │
     │                │ │          │ │ Razorpay     │
-    │  Backups       │ │ CDN      │ │ Gemini AI    │
-    │  Replication   │ │ Upload   │ │ Maps Review  │
+    │  Backups       │ │ CDN      │ │ OpenRouter   │
+    │  Replication   │ │ Upload   │ │ AI (Chatbot) │
     └────────────────┘ └──────────┘ └──────────────┘
 ```
 
@@ -555,7 +555,7 @@ app.use(notFoundHandler)           // 404 handler
     │ Cluster: xxxxx │          ├─ Google OAuth
     │ Backups: Daily │          ├─ Razorpay
     └────────────────┘          ├─ Cloudinary
-                                └─ Gemini AI
+                                └─ OpenRouter AI
 ```
 
 ---

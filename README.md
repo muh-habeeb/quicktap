@@ -96,7 +96,9 @@
 - Dietary preference queries
 - Nutritional information
 - Restaurant services information
-- Powered by Google Gemini AI
+- Powered by **OpenRouter AI** (supports free tier)
+- Smart model routing and fallback handling
+- Context-aware responses
 
 #### 👥 Community Features
 - Share updates and posts
@@ -304,18 +306,47 @@ CLOUDINARY_API_SECRET=your-cloudinary-secret
 
 **Client** (`client/.env`):
 ```env
+# Google OAuth
 VITE_GOOGLE_CLIENT_ID=your-google-client-id
+
+# Razorpay Payment Gateway
 VITE_RAZORPAY_KEY_ID=your-razorpay-key
+
+# OpenRouter AI (Chatbot)
+VITE_OPENROUTER_API_KEY=your-openrouter-api-key
+
+# Google Maps
+VITE_GOOGLE_MAPS_REVIEW_URL=your-google-maps-url
 ```
 
-### 2. Database
+### 2. AI Chatbot Setup (OpenRouter)
+
+The chatbot uses **OpenRouter AI** for free-tier support with various models.
+
+**Get Your API Key:**
+1. Visit [openrouter.ai](https://openrouter.ai)
+2. Sign up for a free account
+3. Go to **Settings** → **API Keys**
+4. Copy your API key
+5. Add to `client/.env`:
+   ```env
+   VITE_OPENROUTER_API_KEY=sk-or-v1-...
+   ```
+
+**Features:**
+- Free tier available (limited requests)
+- Multiple model options via `openrouter/auto`
+- Smart routing to best available model
+- Fallback handling for quota limits
+
+### 3. Database
 
 Make sure MongoDB is running:
 ```bash
 mongod
 ```
 
-### 3. Create Admin User
+### 4. Create Admin User
 
 ```bash
 cd server
@@ -392,6 +423,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
 | ![shadcn/ui](https://img.shields.io/badge/shadcn/ui-Latest-000000) | Component Library | Latest |
 | ![React Router](https://img.shields.io/badge/React_Router-6.x-CA4245?logo=reactrouter) | Routing | 6.x |
 | ![Axios](https://img.shields.io/badge/Axios-1.x-5A29E4?logo=axios) | HTTP Client | 1.x |
+| ![OpenRouter](https://img.shields.io/badge/OpenRouter-API-FF6B6B) | AI Models | Latest |
 
 ### Backend
 | Technology | Purpose | Version |
