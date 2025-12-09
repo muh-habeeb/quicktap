@@ -40,8 +40,12 @@ export default function Chatbot() {
 
   const getAIResponse = async (query: string): Promise<string> => {
     try {
-      const genAI = new GoogleGenAI({ apiKey: import.meta.env.VITE_GOOGLE_GENAI_API_KEY });
-
+      const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
+      
+      if (!apiKey) {
+        return "OpenRouter API key not configured. Please add VITE_OPENROUTER_API_KEY to your .env file.";
+      }
+      
       const prompt = `You are a friendly and helpful food assistant chatbot for customers.
         You help customers by answering questions about menu items, dietary preferences, nutritional information, food recommendations, and restaurant services.
         Provide personalized suggestions based on their food preferences, dietary restrictions, and taste preferences.
@@ -50,13 +54,44 @@ export default function Chatbot() {
         Important: When providing links, just write them as plain URLs without any markdown formatting or backticks.
         User query: ${query}`;
 
-      const response = await genAI.models.generateContent({
-        model: "gemini-2.0-flash-001",
-        contents: prompt,
-      });
+      const response = await fetch(
+        'https://openrouter.ai/api/v1/chat/completions',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+            'HTTP-Referer': window.location.origin,
+            'X-Title': 'QuickTap Chatbot',
+          },
+          body: JSON.stringify({
+            model: 'openrouter/auto',
+            messages: [
+              {
+                role: 'system',
+                content: 'You are a friendly and helpful food assistant chatbot for a restaurant ordering platform. Help customers with menu questions, recommendations, and ordering assistance. Keep responses concise and helpful.'
+              },
+              {
+                role: 'user',
+                content: prompt
+              }
+            ],
+            temperature: 0.7,
+            max_tokens: 500,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`OpenRouter API Error: ${errorData.error?.message || response.statusText}`);
+      }
+
+      const data = await response.json();
+      const text = data.choices?.[0]?.message?.content || 'No response generated';
 
       // Clean up the response by removing markdown formatting
-      return response.text
+      return text
         .replace(/\*\*/g, '') // Remove double asterisks
         .replace(/\*/g, '')   // Remove single asterisks
         .replace(/`/g, '')    // Remove backticks
@@ -67,13 +102,14 @@ export default function Chatbot() {
 
       // Handle rate limiting with retry delay
       if (error.message?.includes('429') || error.message?.includes('quota')) {
-        const retryDelay = error.message.match(/retryDelay":"(\d+)s"/)?.[1] || '30';
-        return `I'm currently experiencing high traffic. Please try again in ${retryDelay} seconds.`;
+        return `I'm currently experiencing high traffic. Please try again in a few moments.`;
       }
 
       return "I apologize, but I'm having trouble connecting to my knowledge base. Please try again later.";
     }
   };
+
+  // OLD CODE MOVED TO GIT HISTORY - now using OpenRouter API instead of Google Gemini
 
   const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
