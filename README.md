@@ -527,45 +527,51 @@ SERVER_URL=http://localhost:5000
 DB_URL=mongodb://localhost:27017/quicktap
 
 # OR MongoDB Atlas (Cloud)
-# DB_URL=mongodb+srv://username:password@cluster.mongodb.net/quicktap?retryWrites=true&w=majority
+# DB_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/quicktap?retryWrites=true&w=majority
+
 
 # ============ JWT AUTHENTICATION ============
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_SECRET=your-super-secret-jwt-key
 JWT_TIMEOUT=3d
 
+
 # ============ GOOGLE OAUTH 2.0 ============
-# Get these from: https://console.cloud.google.com/
-GOOGLE_CLIENT_ID=858522882521-kaolgrmvqpp6q7vvh4njf5qe0g1p6qbe.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
+# Get these from Google Cloud Console
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
 
 # ============ RAZORPAY PAYMENT GATEWAY ============
-# Get these from: https://dashboard.razorpay.com/app/keys
-RAZORPAY_KEY_ID=rzp_test_RmpLL8qhP2sglB
-RAZORPAY_KEY_SECRET=BaYOq3hEzfDn8PORH53N5PcZ
+# Get these from Razorpay Dashboard
+RAZORPAY_KEY_ID=your-razorpay-key-id
+RAZORPAY_KEY_SECRET=your-razorpay-key-secret
+
 
 # ============ CLOUDINARY IMAGE UPLOAD ============
-# Get these from: https://cloudinary.com/console/settings/api
-CLOUDINARY_CLOUD_NAME=dta9j3y0h
-CLOUDINARY_API_KEY=234732729581863
-CLOUDINARY_API_SECRET=kihv8FXOSsiV1JlZs9lcCu7njEE
+# Get these from Cloudinary Console
+CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
+CLOUDINARY_API_KEY=your-cloudinary-api-key
+CLOUDINARY_API_SECRET=your-cloudinary-api-secret
+
 
 # ============ GOOGLE GEMINI AI (Chatbot) ============
-# Get this from: https://makersuite.google.com/app/apikey
-VITE_GOOGLE_GENAI_API_KEY=AIzaSyCHmgISdV-xtgiuD7iWf_qHn7cShgYlxnE
+# Get this from Google AI Studio / MakerSuite
+VITE_GOOGLE_GENAI_API_KEY=your-google-genai-api-key
+
 
 # ============ CLIENT-SIDE VARIABLES ============
-# Used in client build
-VITE_GOOGLE_CLIENT_ID=34565640354-hpqh2922cgrnun7vmubq52udnip5jt11.apps.googleusercontent.com
-VITE_RAZORPAY_KEY_ID=rzp_test_RmpLL8qhP2sglB
-VITE_RAZORPAY_KEY_SECRET=BaYOq3hEzfDn8PORH53N5PcZ
+VITE_GOOGLE_CLIENT_ID=your-google-client-id
+VITE_RAZORPAY_KEY_ID=your-razorpay-key-id
+
 
 # ============ GOOGLE MAPS REVIEW URL ============
-# Get from: https://maps.google.com/ → Share link
-GOOGLE_MAPS_REVIEW_URL=https://share.google/cbBjzGYI789EORiyA
+GOOGLE_MAPS_REVIEW_URL=your-google-maps-review-link
+
 
 # ============ CORS CONFIGURATION (Optional) ============
 # CORS_ORIGIN=http://localhost:5173,http://localhost:3000
 # CORS_CREDENTIALS=true
+
 ```
 
 #### Client Configuration (`client/.env`)
